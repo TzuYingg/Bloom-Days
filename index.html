@@ -287,6 +287,47 @@
   .seqn.plus{background:none!important;color:var(--muted);opacity:.5;border:1.6px dashed var(--hair);font-family:inherit;font-weight:400;font-size:16px;box-shadow:none;}
   .seqn:active{transform:scale(.85);}
 
+  /* ===== Bloom 靜心首頁 ===== */
+  .bloom-hero{padding:8px 2px 2px;text-align:center;}
+  .bloom-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+  .greet-lg{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--ink);opacity:.82;}
+  .bloom-jump{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:none;border-radius:20px;padding:8px 13px;font-family:inherit;font-size:13px;color:var(--accent);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .12s ease;}
+  .bloom-jump:active{transform:scale(.95);}
+  .bloom-jump .ar{width:15px;height:15px;}
+  .bloom-flower{display:flex;justify-content:center;margin:8px 0 2px;}
+  .bloomsvg{animation:bloomOpen .9s cubic-bezier(.22,.61,.36,1) both;transform-origin:60px 60px;}
+  @keyframes bloomOpen{from{transform:scale(.55);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .bloom-cap{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--ink);opacity:.72;margin-top:2px;line-height:1.6;}
+  .feat-card{background:var(--card);border-radius:20px;padding:18px 18px 16px;margin-top:20px;box-shadow:var(--shadow);}
+  .feat-title{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:15px;}
+  .mini-row{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .mini-row:last-child{margin-bottom:0;}
+  .mini-row .ic{width:26px;height:26px;flex:none;}
+  .mini-main{flex:1;min-width:0;}
+  .mini-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px;}
+  .mini-name{font-size:14px;color:var(--ink);}
+  .mini-val{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none;}
+  .mini-bar{height:6px;background:#EDE6D9;border-radius:4px;overflow:hidden;}
+  .mini-fill{height:100%;border-radius:4px;background:#8CB06A;transition:width .5s cubic-bezier(.22,.61,.36,1);}
+  .month-blooms{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:16px;padding-top:15px;border-top:1px solid var(--hair);}
+  .month-blooms .ic{width:19px;height:19px;flex:none;vertical-align:middle;}
+  .month-blooms .mb-label{font-size:12px;color:var(--muted);margin-left:3px;line-height:1.5;}
+  .focus-label{font-size:12px;color:var(--muted);letter-spacing:.06em;padding:26px 4px 10px;}
+  .row.focus{padding:16px 18px;box-shadow:var(--shadow-sm);}
+  .row.focus .frow-body{flex:1;min-width:0;}
+  .row.focus .star-tag{align-self:center;color:#E7B24E;font-size:14px;flex:none;}
+  .row.focus.burst .dot{animation:dotBurst .6s ease;}
+  @keyframes dotBurst{0%{transform:scale(1);}42%{transform:scale(1.34);}100%{transform:scale(1);}}
+  .focus-empty{background:var(--card);border-radius:18px;padding:22px;text-align:center;color:var(--muted);font-size:14px;box-shadow:var(--shadow-sm);line-height:1.8;}
+  .bloom-cta{display:block;width:100%;background:var(--accent-soft);border:none;border-radius:16px;padding:16px;margin-top:16px;font-family:inherit;font-size:15px;font-weight:500;color:var(--accent);cursor:pointer;transition:transform .12s ease;}
+  .bloom-cta:active{transform:scale(.98);}
+  /* 養分：儀式感標題、主頁推薦、完成微動 */
+  .ritual-title{font-family:"Noto Serif TC",serif;font-size:15.5px;color:var(--ink);opacity:.78;padding:6px 4px 16px;line-height:1.75;}
+  .feat-pick{margin:16px 2px 2px;}
+  .feat-pick-label{font-size:12px;color:var(--muted);margin-bottom:10px;letter-spacing:.02em;}
+  .hcard.bloomflash{animation:cardBloom .7s ease;}
+  @keyframes cardBloom{0%{transform:scale(1);}35%{transform:scale(1.045);}100%{transform:scale(1);}}
+
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 
   /* 同步狀態小點 */
@@ -320,6 +361,7 @@
     <div class="field"><label>需要多少精神</label><div class="chips" id="segEng"></div></div>
     <div class="field"><label>時間（可留空）</label><input type="time" id="inTime"></div>
     <div class="field"><label>截止日（可留空）</label><input type="date" id="inDue"></div>
+    <div class="field"><label>今日焦點</label><div class="chips" id="segStar"><button type="button" data-star="1">★ 放上 Bloom 首頁</button></div></div>
     <div class="sheet-actions">
       <button class="btn-cancel" id="btnCancel">取消</button>
       <button class="btn-save" id="btnSave">加入</button>
@@ -400,6 +442,7 @@
 
   // 底部列項目與各自選用的圖示（想換就改 icon 後面的 a/b/c）
   var NAV=[
+    {v:"bloom",   name:"Bloom", icon:"nav_bloom_a"},
     {v:"today",   name:"今日", icon:"nav_today_a"},
     {v:"calendar",name:"月曆", icon:"nav_cal_a"},
     {v:"recur",   name:"固定", icon:"nav_recur_a"},
@@ -492,6 +535,8 @@
   ICONS.nav_recur_a='<path d="M8.5 14a7.5 7.5 0 0 1 12.4-3.2M23.5 18a7.5 7.5 0 0 1-12.4 3.2" stroke="#7E9AB6" stroke-width="1.8"/><path d="M20.2 6.6l1.2 4-4 .7z" fill="#7E9AB6"/><path d="M11.8 25.4l-1.2-4 4-.7z" fill="#7E9AB6"/>';
   ICONS.nav_recur_b='<path d="M12.5 6.5h7l-1 6 3.2 3.2v1.8h-11.4v-1.8l3.2-3.2z" fill="#C98A5A" stroke="#9E6E3E" stroke-width="1.4" stroke-linejoin="round"/><path d="M16 17.5V25.5" stroke="#9E6E3E" stroke-width="1.7"/><ellipse cx="16" cy="9.4" rx="2.1" ry="1" fill="#E7C3A0" opacity=".7"/>';
   ICONS.nav_recur_c='<circle cx="16" cy="17.5" r="7.3" fill="#EDE7DD" stroke="#9E8E79" stroke-width="1.5"/><path d="M16 13.6v4.2l2.8 1.7" stroke="#7A6A52" stroke-width="1.6"/><path d="M10.6 8.2a7 7 0 0 1 8.8-.2" stroke="#7E9AB6" stroke-width="1.6" fill="none"/><path d="M19.8 5.6l.5 2.6-2.6.3z" fill="#7E9AB6"/>';
+  // Bloom 靜心首頁（花瓣漸開）
+  ICONS.nav_bloom_a='<path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4" transform="rotate(-34 16 27.5)"/><path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4" transform="rotate(34 16 27.5)"/><path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#BFD3E8" stroke="#6E8AA8" stroke-width="1.3"/><circle cx="16" cy="16.5" r="2.3" fill="#F4CE6E" stroke="#D99A2E" stroke-width="1"/>';
   // 養分
   ICONS.nav_nutrient_a='<path d="M16 27V14.5" stroke="#6E8A56" stroke-width="1.8"/><path d="M16 16.5c-4.6 0-7.2-2.6-7.2-7.2 4.6 0 7.2 2.6 7.2 7.2Z" fill="#A9C48C" stroke="#6E8A56" stroke-width="1.4"/><path d="M16 14.5c4.1 0 6.6-2.3 6.6-6.6-4.1 0-6.6 2.3-6.6 6.6Z" fill="#BBD39F" stroke="#6E8A56" stroke-width="1.4"/><path d="M12.5 27h7" stroke="#9E7A4E" stroke-width="1.7"/>';
   ICONS.nav_nutrient_b='<path d="M16 6c4.2 5.2 6.3 8.4 6.3 11.5a6.3 6.3 0 0 1-12.6 0C9.7 14.4 11.8 11.2 16 6Z" fill="#AFD2E6" stroke="#5E9AB8" stroke-width="1.5"/><path d="M12.8 18a3.2 3.2 0 0 0 3.2 3.2" stroke="#EAF1F5" stroke-width="1.4"/>';
@@ -526,7 +571,8 @@
   function loadMode(dateStr){try{return localStorage.getItem(MKEY+dateStr)||"focus";}catch(e){return "focus";}}
   function saveMode(dateStr,m){try{localStorage.setItem(MKEY+dateStr,m);}catch(e){}}
 
-  var view="today", sel=new Date(), calMonth=new Date(), showOther=false;
+  var view="bloom", sel=new Date(), calMonth=new Date(), showOther=false;
+  var flashHab=null, bloomBurst=null;
   var items=load(), mode=loadMode(ymd(new Date()));
   var TMKEY="lifeos_todaymode";
   var todayMode=(function(){try{return localStorage.getItem(TMKEY)||"context";}catch(e){return "context";}})();
@@ -566,6 +612,12 @@
   function loadInbox(){try{return JSON.parse(localStorage.getItem(IKEY)||"[]");}catch(e){return[];}}
   function saveInbox(){try{localStorage.setItem(IKEY,JSON.stringify(inbox));}catch(e){}}
   var inbox=loadInbox();
+  // Bloom 首頁推薦的養分（最多 3 個）
+  var FKEY="lifeos_featbits";
+  function loadFeat(){try{return JSON.parse(localStorage.getItem(FKEY)||"[]");}catch(e){return[];}}
+  function saveFeat(){try{localStorage.setItem(FKEY,JSON.stringify(feat));}catch(e){}}
+  var feat=loadFeat();
+  function toggleFeat(k){var i=feat.indexOf(k);if(i>=0){feat.splice(i,1);}else{if(feat.length>=3)feat.shift();feat.push(k);}saveFeat();render();}
   function relTime(ms){var d=Date.now()-ms,m=Math.floor(d/60000);if(m<1)return"剛剛";if(m<60)return m+" 分鐘前";var h=Math.floor(m/60);if(h<24)return h+" 小時前";return Math.floor(h/24)+" 天前";}
   var HKEY="lifeos_habits";
   function loadH(){try{return JSON.parse(localStorage.getItem(HKEY)||"{}");}catch(e){return{};}}
@@ -641,12 +693,88 @@
     document.getElementById("fab").style.display=(view==="today"||view==="calendar")?"":"none";
     document.getElementById("jot").style.display=(view==="today"||view==="calendar"||view==="inbox")?"":"none";
     main.innerHTML="";
-    if(view==="today"){renderToday();}
+    if(view==="bloom"){renderBloom();}
+    else if(view==="today"){renderToday();}
     else if(view==="calendar"){renderCalendar();}
     else if(view==="recur"){renderRecur();}
     else if(view==="nutrient"){renderNutrient();}
     else if(view==="review"){renderReview();}
     else{renderInbox();}
+  }
+  // ---- Bloom 靜心首頁 ----
+  function greetWord(){var h=new Date().getHours();if(h<5)return"夜深了";if(h<11)return"早安";if(h<14)return"午安";if(h<18)return"午後好";if(h<22)return"晚安";return"夜深了";}
+  function heroFlower(ratio){
+    var bloomed=Math.round(Math.max(0,Math.min(ratio,1))*5);
+    var pet=[[60,33,0],[85.68,51.66,72],[75.87,81.85,144],[44.13,81.85,216],[34.32,51.66,288]];
+    var s='<svg class="bloomsvg" viewBox="0 0 120 120" width="130" height="130" fill="none" stroke-linejoin="round">';
+    for(var i=0;i<5;i++){var p=pet[i],on=i<bloomed;
+      s+='<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="17" ry="27" transform="rotate('+p[2]+' '+p[0]+' '+p[1]+')" fill="'+(on?"#8AA6CA":"#E7E1D5")+'" stroke="'+(on?"#4E6E96":"#CFC7B6")+'" stroke-width="1.6"/>';}
+    var warm=ratio>0;
+    s+='<circle cx="60" cy="60" r="15" fill="'+(warm?"#F4CE6E":"#E7E1D5")+'" stroke="'+(warm?"#D99A2E":"#CFC7B6")+'" stroke-width="1.5"/>';
+    if(warm)s+='<circle cx="60" cy="60" r="8.5" fill="#F7E3A4"/><circle cx="60" cy="60" r="3.4" fill="#E3A63C"/>';
+    return s+'</svg>';
+  }
+  function bloomDaysCount(){
+    var mk=ymd(new Date()).slice(0,7),by={};
+    items.concat(archive).forEach(function(i){if((i.date||"").indexOf(mk)===0)(by[i.date]=by[i.date]||[]).push(i);});
+    var n=0;for(var d in by){var arr=by[d];if(arr.length&&arr.every(function(x){return x.done;}))n++;}
+    return n;
+  }
+  function renderBloom(){
+    main.innerHTML="";
+    var t=ymd(new Date());
+    var todays=items.filter(function(i){return i.date===t;});
+    var total=todays.length,doneN=todays.filter(function(i){return i.done;}).length;
+    var ratio=total?doneN/total:0;
+    var cap=total?(ratio>=1?"今天全部綻放了 🌸":"今天 "+doneN+"／"+total+" 綻放"):"今天還沒有安排，先好好深呼吸一下。";
+    main.insertAdjacentHTML("beforeend",'<div class="bloom-hero"><div class="bloom-top"><div class="greet-lg">'+greetWord()+'</div>'+
+      '<button class="bloom-jump" data-goto="today">今日<svg class="ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>'+
+      '<div class="bloom-flower">'+heroFlower(ratio)+'</div><div class="bloom-cap">'+cap+'</div></div>');
+    // 本月的養分：主頁推薦（沒選就自動抓前三個）今日進度
+    var keys=feat.length?feat.slice(0,3):HABITS.slice(0,3).map(function(h){return h.k;});
+    var th=todayH(),bars="";
+    keys.forEach(function(k){var h=HAB[k];if(!h)return;
+      var cur=th[k]||0,r,val;
+      if(h.type==="count"){r=Math.min(cur/h.max,1);val=cur+" "+h.unit;}else{r=cur?1:0;val=cur?"完成 ✓":"還沒";}
+      bars+='<div class="mini-row">'+ic(h.icon)+'<div class="mini-main"><div class="mini-top"><span class="mini-name">'+h.name+'</span><span class="mini-val">'+val+'</span></div><div class="mini-bar"><div class="mini-fill" style="width:'+(r*100)+'%"></div></div></div></div>';
+    });
+    var bd=bloomDaysCount(),flowers="";
+    for(var fi=0;fi<Math.min(bd,10);fi++)flowers+=ic("nav_bloom_a");
+    var mb=bd?('<div class="month-blooms">'+flowers+'<span class="mb-label">本月綻放 '+bd+' 天</span></div>')
+             :('<div class="month-blooms"><span class="mb-label">完成一天全部的事，這裡就開一朵花。</span></div>');
+    main.insertAdjacentHTML("beforeend",'<div class="feat-card"><div class="feat-title">本月的養分</div>'+bars+mb+'</div>');
+    // 今日焦點：手動釘選優先，沒釘就用最近截止日自動補
+    main.insertAdjacentHTML("beforeend",'<div class="focus-label">今日焦點</div>');
+    if(!total){
+      main.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天還很空白。<br>到「今日」加一件想做的事吧。</div>');
+    }else{
+      var focus=todays.filter(function(i){return i.star;});
+      focus.sort(function(a,b){var ad=a.done?1:0,bd=b.done?1:0;if(ad!==bd)return ad-bd;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
+      if(focus.length<3){
+        var auto=todays.filter(function(i){return !i.done&&!i.star;});
+        auto.sort(function(a,b){var da=daysUntil(a.due),db=daysUntil(b.due);var ua=(da!=null&&da<=7)?da:99,ub=(db!=null&&db<=7)?db:99;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
+        focus=focus.concat(auto.slice(0,3-focus.length));
+      }
+      focus=focus.slice(0,3);
+      if(!focus.length){
+        main.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天的事都完成了 🌿<br>好好休息一下。</div>');
+      }else{
+        var wrap=document.createElement("div");wrap.className="agenda";
+        focus.forEach(function(it){
+          var color=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--accent)";
+          var burst=(bloomBurst===it.id&&it.done)?" burst":"";
+          var row=document.createElement("div");row.className="row focus"+(it.done?" done":"")+burst;row.style.color=color;
+          row.innerHTML='<div class="dot" data-toggle="'+it.id+'" style="border-color:'+color+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
+            '<div class="frow-body"><div class="row-title" style="color:var(--ink)"></div>'+dueHtml(it)+'</div>'+(it.star?'<span class="star-tag">★</span>':'');
+          row.querySelector(".row-title").textContent=it.title;
+          if(it.done)row.querySelector(".row-title").style.color="var(--muted)";
+          wrap.appendChild(row);
+        });
+        main.appendChild(wrap);
+      }
+    }
+    bloomBurst=null;
+    main.insertAdjacentHTML("beforeend",'<button class="bloom-cta" data-goto="today">進入今日 →</button>');
   }
   function renderInbox(){
     main.insertAdjacentHTML("beforeend",'<div class="recur-intro">先丟進來，毫無壓力。有空再滑一滑，把想做的排進生活裡。</div>');
@@ -721,9 +849,7 @@
   }
   function renderNutrient(){
     var th=todayH();
-    var intro=document.createElement("div");intro.className="recur-intro";
-    intro.textContent="今天也好好照顧自己。斷了也沒關係，把節奏找回來就好。";
-    main.appendChild(intro);
+    main.insertAdjacentHTML("beforeend",'<div class="ritual-title">好好照顧自己，也是一種完成。<br>這個月，慢慢灌溉這些領域：</div>');
     var quad=document.createElement("div");quad.className="quad";
     HABITS.forEach(function(h){
       var cur=th[h.k]||0,card;
@@ -737,7 +863,17 @@
       }
       quad.insertAdjacentHTML("beforeend",card);
     });
+    if(flashHab){
+      var fc=quad.querySelector('[data-hcheck="'+flashHab+'"]');
+      if(!fc){var fb=quad.querySelector('[data-h="'+flashHab+'"]');if(fb)fc=fb.closest(".hcard");}
+      if(fc)fc.classList.add("bloomflash");
+      flashHab=null;
+    }
     main.appendChild(quad);
+    var fp=document.createElement("div");fp.className="feat-pick";
+    var fchips="";HABITS.forEach(function(h){fchips+='<button class="'+(feat.indexOf(h.k)>=0?"on":"")+'" data-featstar="'+h.k+'">'+ic(h.icon)+h.name+'</button>';});
+    fp.innerHTML='<div class="feat-pick-label">在 Bloom 首頁想看到哪些養分？（最多 3 個）</div><div class="chips">'+fchips+'</div>';
+    main.appendChild(fp);
 
     var sv=th.sleep||0,moons="";
     SLEEP.forEach(function(s){moons+='<button class="moonopt'+(sv===s.v?' on':'')+'" data-sleep="'+s.v+'">'+ic(s.icon)+'<span class="mn">'+s.name+'</span></button>';});
@@ -963,7 +1099,7 @@
 
   // sheet
   var sheet=document.getElementById("sheet"),scrim=document.getElementById("scrim");
-  var sCat=null,sCup=null,sEng=null,sCtx=[],editId=null;
+  var sCat=null,sCup=null,sEng=null,sCtx=[],sStar=false,editId=null;
   (function(){
     var cb=document.getElementById("segCat");CATS.forEach(function(c){cb.innerHTML+='<button data-c="'+c.k+'">'+ic(c.k)+c.name+'</button>';});
     var xb=document.getElementById("segCtx");MODES.filter(function(m){return m.k!=="all";}).forEach(function(m){xb.innerHTML+='<button data-x="'+m.k+'">'+ic(m.ico)+m.name+'</button>';});
@@ -983,6 +1119,8 @@
     sCup=item?(item.cup||null):null;
     sEng=item?(item.eng||null):null;
     sCtx=item&&item.ctx?item.ctx.slice():[];
+    sStar=item?!!item.star:false;
+    var starBtn=document.querySelector('#segStar [data-star]');if(starBtn)starBtn.classList.toggle("on",sStar);
     ["segCat","segCtx","segCup","segEng"].forEach(clearSeg);
     if(sCat){var bc=document.querySelector('#segCat [data-c="'+sCat+'"]');if(bc)bc.classList.add("on");}
     if(sCup){var bp=document.querySelector('#segCup [data-v="'+sCup+'"]');if(bp)bp.classList.add("on");}
@@ -1067,16 +1205,20 @@
     if(!t){document.getElementById("inTitle").focus();return;}
     if(editId){
       var it=items.find(function(x){return x.id===editId;});
-      if(it){it.title=t;it.cat=sCat||"";it.ctx=sCtx.slice();it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.due=document.getElementById("inDue").value;}
+      if(it){it.title=t;it.cat=sCat||"";it.ctx=sCtx.slice();it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.due=document.getElementById("inDue").value;it.star=sStar;}
       editId=null;save();closeSheet();render();return;
     }
     var targetDate=view==="calendar"?ymd(sel):ymd(new Date());
-    items.push({id:Date.now(),cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,due:document.getElementById("inDue").value,done:false});
+    items.push({id:Date.now(),cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,due:document.getElementById("inDue").value,done:false,star:sStar});
     save();closeSheet();render();
   }
 
   document.getElementById("tabbar").addEventListener("click",function(e){var b=e.target.closest(".view-btn");if(!b)return;view=b.dataset.view;showOther=false;render();});
   main.addEventListener("click",function(e){
+    var gt=e.target.closest("[data-goto]");
+    if(gt){view=gt.dataset.goto;showOther=false;render();return;}
+    var fst=e.target.closest("[data-featstar]");
+    if(fst){toggleFeat(fst.dataset.featstar);return;}
     var md=e.target.closest("[data-mode]");
     if(md){mode=md.dataset.mode;showOther=false;saveMode(ymd(new Date()),mode);render();return;}
     var br=e.target.closest("[data-breathe]");
@@ -1094,9 +1236,9 @@
     var hd=e.target.closest("[data-hdec]");
     if(hd){var hk2=hd.dataset.hdec,ht2=todayH();ht2[hk2]=Math.max(0,(ht2[hk2]||0)-(HAB[hk2].step||1));saveH();render();return;}
     var hb=e.target.closest("[data-h]");
-    if(hb){var hk=hb.dataset.h,ht=todayH(),st=HAB[hk].step||1,mx=HAB[hk].max||Infinity;ht[hk]=Math.min((ht[hk]||0)+st,mx);saveH();render();return;}
+    if(hb){var hk=hb.dataset.h,ht=todayH(),st=HAB[hk].step||1,mx=HAB[hk].max||Infinity;ht[hk]=Math.min((ht[hk]||0)+st,mx);flashHab=hk;saveH();render();return;}
     var hc=e.target.closest("[data-hcheck]");
-    if(hc){var hk3=hc.dataset.hcheck,ht3=todayH();ht3[hk3]=ht3[hk3]?0:1;saveH();render();return;}
+    if(hc){var hk3=hc.dataset.hcheck,ht3=todayH();ht3[hk3]=ht3[hk3]?0:1;if(ht3[hk3])flashHab=hk3;saveH();render();return;}
     var sl=e.target.closest("[data-sleep]");
     if(sl){var sv=+sl.dataset.sleep,ts=todayH();ts.sleep=ts.sleep===sv?0:sv;saveH();render();return;}
     var lgb=e.target.closest("[data-lang]");
@@ -1108,7 +1250,7 @@
     var so=e.target.closest("[data-showother]");
     if(so){showOther=true;render();return;}
     var tg=e.target.closest("[data-toggle]");
-    if(tg){var id=+tg.dataset.toggle,it=items.find(function(x){return x.id===id;});if(it){it.done=!it.done;it.doneDate=it.done?ymd(new Date()):"";save();render();}return;}
+    if(tg){var id=+tg.dataset.toggle,it=items.find(function(x){return x.id===id;});if(it){it.done=!it.done;it.doneDate=it.done?ymd(new Date()):"";if(view==="bloom"&&it.done)bloomBurst=id;save();render();}return;}
     var scb=e.target.closest("[data-clearseq]");
     if(scb){clearSeq();return;}
     var stb=e.target.closest("[data-seqtap]");
@@ -1130,6 +1272,7 @@
   document.getElementById("segCup").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sCup=toggleSeg("segCup",b,sCup,+b.dataset.v);});
   document.getElementById("segEng").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sEng=toggleSeg("segEng",b,sEng,+b.dataset.v);});
   document.getElementById("segCtx").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var m=b.dataset.x,idx=sCtx.indexOf(m);if(idx>=0){sCtx.splice(idx,1);b.classList.remove("on");}else{sCtx.push(m);b.classList.add("on");}});
+  document.getElementById("segStar").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sStar=!sStar;b.classList.toggle("on",sStar);});
   var lAct=null,lMin=null;
   function openLeisure(){lAct=null;lMin=null;["lAct","lMin"].forEach(clearSeg);scrim.classList.add("open");lsheet.classList.add("open");}
   function saveLeisure(){if(!lAct)return;var t=ymd(new Date());items.push({id:Date.now(),cat:"recharge",ctx:["rest"],date:t,doneDate:t,time:"",cup:0,eng:1,title:lAct,min:lMin||30,done:true,leisure:true});save();closeSheets();render();}
@@ -1188,7 +1331,7 @@
       mode=loadMode(ymd(new Date()));
       try{todayMode=localStorage.getItem(TMKEY)||"context";}catch(e){todayMode="context";}
       RECUR=loadRecur(); words=loadWords(); inbox=loadInbox();
-      hlog=loadH(); rgen=loadRG(); archive=loadArchive();
+      hlog=loadH(); rgen=loadRG(); archive=loadArchive(); feat=loadFeat();
     }
     function applyRemote(data){
       applyingRemote=true;
