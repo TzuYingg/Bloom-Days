@@ -275,12 +275,6 @@
   .field select.daysel:focus{border-color:var(--accent);}
   .field select.daysel.need{border-color:#C99A6A;}
 
-  /* 今日：依情境 / 排順序 切換（文字） */
-  .todaytog{display:flex;gap:6px;margin:0 0 12px;}
-  .todaytog .ttg{flex:none;border:none;background:none;font-family:inherit;font-size:13px;color:var(--muted);padding:6px 13px;border-radius:16px;cursor:pointer;transition:all .18s ease;}
-  .todaytog .ttg:active{transform:scale(.96);}
-  .todaytog .ttg.on{background:var(--accent-soft);color:var(--ink);font-weight:500;}
-
   /* 今日：排順序頁（沿用完整任務卡片，右側掛小號碼） */
   .ord-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
   .ord-head .mode-hint{margin:0;flex:1;}
@@ -382,19 +376,20 @@
 
   var CATS=[
     {k:"advance", name:"推進", color:"#5E7DA8"},
-    {k:"maintain",name:"維持", color:"#B58755"},
-    {k:"growth",  name:"成長", color:"#7C9A5C"},
-    {k:"connect", name:"陪伴", color:"#C87B86"},
-    {k:"recharge",name:"恢復", color:"#4E9A93"},
-    {k:"create",  name:"創造", color:"#9B72A6"}
+    {k:"maintain",name:"例行", color:"#B58755"},
+    {k:"growth",  name:"精進", color:"#7C9A5C"},
+    {k:"connect", name:"家庭", color:"#C87B86"},
+    {k:"recharge",name:"充電", color:"#4E9A93"},
+    {k:"create",  name:"發想", color:"#9B72A6"}
   ];
   var CAT={};CATS.forEach(function(c){CAT[c.k]=c;});
 
   var MODES=[
-    {k:"onsite",ico:"store", name:"現場", accent:"#B07A4E", soft:"rgba(176,122,78,.14)", hint:"人在店裡，先處理直覺的事就好。", show:["maintain"]},
-    {k:"focus", ico:"laptop",name:"專注", accent:"#4A6FA5", soft:"rgba(74,111,165,.12)", hint:"坐下來了，留給需要腦力的推進和創造。", show:["advance","create","growth"]},
-    {k:"home",  ico:"home",  name:"在家", accent:"#9A6E52", soft:"rgba(154,110,82,.14)", hint:"回家了，陪伴和恢復放前面。", show:["connect","recharge","maintain"]},
-    {k:"rest",  ico:"night", name:"放空", accent:"#8A8A9E", soft:"rgba(138,138,158,.14)", hint:"什麼都不一定要做，做一件就很好。", show:["recharge"]}
+    {k:"all",   ico:"dashboard", name:"總覽", accent:"#4A6FA5", soft:"rgba(74,111,165,.12)", hint:"今天所有的事都在這，排出先後。", show:[]},
+    {k:"onsite",ico:"awning", name:"現場", accent:"#B07A4E", soft:"rgba(176,122,78,.14)", hint:"人在店裡，先處理直覺的事就好。", show:["maintain"]},
+    {k:"focus", ico:"target",name:"專注", accent:"#4A6FA5", soft:"rgba(74,111,165,.12)", hint:"坐下來了，留給需要腦力的推進和發想。", show:["advance","create","growth"]},
+    {k:"home",  ico:"home",  name:"在家", accent:"#9A6E52", soft:"rgba(154,110,82,.14)", hint:"回家了，家庭和充電放前面。", show:["connect","recharge","maintain"]},
+    {k:"rest",  ico:"sunglass", name:"悠閒", accent:"#8A8A9E", soft:"rgba(138,138,158,.14)", hint:"什麼都不一定要做，做一件就很好。", show:["recharge"]}
   ];
   var MODE={};MODES.forEach(function(m){MODE[m.k]=m;});
 
@@ -415,7 +410,7 @@
   function minLabel(m){return m<60?m+" 分":(m/60)+" 小時";}
   var CUPMIN={1:15,2:30,3:60,4:120};
   function minutesOf(i){return i.min||CUPMIN[i.cup]||0;}
-  function showsIn(i,m){if(i.ctx&&i.ctx.length)return i.ctx.indexOf(m)>=0;return !i.cat||MODE[m].show.indexOf(i.cat)>=0;}
+  function showsIn(i,m){if(m==="all")return true;if(i.ctx&&i.ctx.length)return i.ctx.indexOf(m)>=0;return !i.cat||MODE[m].show.indexOf(i.cat)>=0;}
 
   var CUPS=[{v:1,em:"☕",t:"15分"},{v:2,em:"☕☕",t:"30分"},{v:3,em:"☕☕☕",t:"1小時"},{v:4,em:"☕☕☕☕",t:"2小時"}];
   var CUPT={1:"15分",2:"30分",3:"1小時",4:"2小時"},CUPE={1:"☕",2:"☕☕",3:"☕☕☕",4:"☕☕☕☕"};
@@ -459,6 +454,18 @@
   ICONS.today_ctx='<rect x="7" y="7" width="8.5" height="8.5" rx="2.4" fill="#E7D3BC" stroke="#B07A4E" stroke-width="1.5"/><rect x="16.5" y="7" width="8.5" height="8.5" rx="2.4" fill="#CFE0EE" stroke="#4A6FA5" stroke-width="1.5"/><rect x="7" y="16.5" width="8.5" height="8.5" rx="2.4" fill="#E4D6CB" stroke="#9A6E52" stroke-width="1.5"/><rect x="16.5" y="16.5" width="8.5" height="8.5" rx="2.4" fill="#E1E0E6" stroke="#8A8A9E" stroke-width="1.5"/>';
   ICONS.today_order='<path d="M14 9.5h11M14 16h11M14 22.5h9" stroke="#7E9AB6" stroke-width="1.9"/><text x="6" y="12" font-size="8.5" fill="#4E6E96" font-family="system-ui,sans-serif" font-weight="700">1</text><text x="6" y="18.6" font-size="8.5" fill="#4E6E96" font-family="system-ui,sans-serif" font-weight="700">2</text><text x="6" y="25.2" font-size="8.5" fill="#4E6E96" font-family="system-ui,sans-serif" font-weight="700">3</text>';
   ICONS.dumbbell='<rect x="12.5" y="14.2" width="7" height="3.6" rx="1.8" fill="#E7C3A8" stroke="#B0794E" stroke-width="1.2"/><rect x="6.4" y="10.4" width="5" height="11.2" rx="2.4" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4"/><rect x="20.6" y="10.4" width="5" height="11.2" rx="2.4" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4"/><rect x="4.4" y="12.6" width="3" height="6.8" rx="1.4" fill="#A9C0DC" stroke="#4E6E96" stroke-width="1.2"/><rect x="24.6" y="12.6" width="3" height="6.8" rx="1.4" fill="#A9C0DC" stroke="#4E6E96" stroke-width="1.2"/><ellipse cx="8.8" cy="13.2" rx="1" ry="0.6" fill="#EAF1F8" opacity=".8"/>';
+  // —— 情境列新圖示 ——
+  ICONS.awning='<path d="M6 14.5h20V25a1.2 1.2 0 0 1-1.2 1.2H7.2A1.2 1.2 0 0 1 6 25Z" fill="#F3E6D2" stroke="#B08A5C" stroke-width="1.4"/><rect x="13" y="18.5" width="6" height="7.7" rx="0.8" fill="#E7D3BC" stroke="#B08A5C" stroke-width="1.2"/><path d="M4.8 14.5 6.6 9.6h18.8l1.8 4.9Z" fill="#E0907A" stroke="#C2745F" stroke-width="1.3"/><path d="M11 9.8 10.3 14.5M16 9.7 16 14.5M21 9.8 21.7 14.5" stroke="#F5EFE4" stroke-width="1.1"/>';
+  ICONS.target='<circle cx="16" cy="16" r="10" fill="#CFE0EE" stroke="#4A6FA5" stroke-width="1.5"/><circle cx="16" cy="16" r="6" fill="#FBF7EF" stroke="#4A6FA5" stroke-width="1.3"/><circle cx="16" cy="16" r="2.6" fill="#E0907A" stroke="#C2745F" stroke-width="1"/>';
+  ICONS.sunglass='<path d="M5 13.5h22" stroke="#3A362F" stroke-width="1.4"/><rect x="6" y="13.8" width="8.2" height="6.6" rx="3.2" fill="#CFE0EE" stroke="#4A6FA5" stroke-width="1.4"/><rect x="17.8" y="13.8" width="8.2" height="6.6" rx="3.2" fill="#CFE0EE" stroke="#4A6FA5" stroke-width="1.4"/><path d="M14.2 15.6h3.6" stroke="#4A6FA5" stroke-width="1.4"/>';
+  ICONS.dashboard='<rect x="6" y="8" width="20" height="16" rx="2.6" fill="#FBF7EF" stroke="#5E7890" stroke-width="1.4"/><rect x="8.6" y="10.6" width="6.4" height="4.6" rx="1" fill="#CFE0EE"/><rect x="17" y="10.6" width="6.4" height="4.6" rx="1" fill="#E7D3BC"/><rect x="8.6" y="16.8" width="6.4" height="4.8" rx="1" fill="#D9E4D2"/><rect x="17" y="16.8" width="6.4" height="4.8" rx="1" fill="#E9CFCF"/>';
+  // —— 類別新圖示（沿用各類別色）——
+  ICONS.advance='<path d="M16 5c3 2 4.6 5.6 4.6 9.6 0 3-1 5.6-2 7.1h-5.2c-1-1.5-2-4.1-2-7.1C11.4 10.6 13 7 16 5Z" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4"/><circle cx="16" cy="12.4" r="2.1" fill="#EAF1F8" stroke="#4E6E96" stroke-width="1.2"/><path d="M13.4 20.2l-3 2 .5-4.2M18.6 20.2l3 2-.5-4.2" fill="#E0907A" stroke="#C2745F" stroke-width="1.3" stroke-linejoin="round"/><path d="M14.4 23.4c.6 1.6 2.6 1.6 3.2 0" fill="#F4CE6E" stroke="#D99A2E" stroke-width="1.2"/>';
+  ICONS.maintain='<path d="M7.5 16a8.5 8.5 0 0 1 14.5-6" fill="none" stroke="#B58755" stroke-width="1.9" stroke-linecap="round"/><path d="M24.5 16a8.5 8.5 0 0 1-14.5 6" fill="none" stroke="#B58755" stroke-width="1.9" stroke-linecap="round"/><path d="M18.4 9.4 22.5 10.1 23 5.9" fill="none" stroke="#B58755" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.6 22.6 9.5 21.9 9 26.1" fill="none" stroke="#B58755" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>';
+  ICONS.growth='<path d="M16 9c-2.2-1.6-5-2.2-8-2v14c3-.2 5.8.4 8 2Z" fill="#D9E4D2" stroke="#6E8A56" stroke-width="1.4"/><path d="M16 9c2.2-1.6 5-2.2 8-2v14c-3-.2-5.8.4-8 2Z" fill="#C7DBB8" stroke="#6E8A56" stroke-width="1.4"/><path d="M16 9v14" stroke="#6E8A56" stroke-width="1.3"/><path d="M9 11.6c1.6-.2 3.4 0 4.8.8M9 15.1c1.6-.2 3.4 0 4.8.8" stroke="#8CAE6E" stroke-width="1"/>';
+  ICONS.connect='<circle cx="12" cy="11" r="3.4" fill="#E7B7BE" stroke="#B56A76" stroke-width="1.4"/><path d="M6.4 25c0-3.6 2.6-6.2 5.6-6.2s5.6 2.6 5.6 6.2Z" fill="#EFC9CF" stroke="#B56A76" stroke-width="1.4"/><circle cx="21.6" cy="15" r="2.5" fill="#F0D6C0" stroke="#B58060" stroke-width="1.3"/><path d="M17.4 25c0-2.6 1.9-4.6 4.2-4.6s4.2 2 4.2 4.6Z" fill="#F5E1D0" stroke="#B58060" stroke-width="1.3"/>';
+  ICONS.recharge='<rect x="6" y="11" width="18" height="11" rx="2.4" fill="#EAF1F5" stroke="#4E8A83" stroke-width="1.5"/><rect x="24.6" y="14" width="2.6" height="5" rx="1" fill="#4E8A83"/><rect x="8" y="13.4" width="3.6" height="6.2" rx="1" fill="#A9D0C9"/><path d="M16.5 12.8 12.8 17.6h3.2l-.6 4.4 4.4-5.4h-3.2z" fill="#F4CE6E" stroke="#D99A2E" stroke-width="1.1" stroke-linejoin="round"/>';
+  ICONS.create='<path d="M16 6l1.7 4.8 4.8 1.7-4.8 1.7L16 19l-1.7-4.8L9.5 12.5l4.8-1.7z" fill="#C6A9CE" stroke="#8A6E96" stroke-width="1.4" stroke-linejoin="round"/><path d="M23.5 18l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="#DCC9E0" stroke="#8A6E96" stroke-width="1.1" stroke-linejoin="round"/><circle cx="9" cy="21" r="1.4" fill="#C6A9CE" stroke="#8A6E96" stroke-width="1"/>';
   ICONS.sleep='<path d="M22 19A7.5 7.5 0 1 1 15 8.5 6 6 0 0 0 22 19Z" fill="#EDE6DE" stroke="#8B8698" stroke-width="1.4"/><path d="M19.5 8h4l-4 4h4" stroke="#C9A85E" stroke-width="1.3" fill="none"/>';
   ICONS.moon_full='<circle cx="16" cy="16" r="9" fill="#EFEAE0" stroke="#B4ADBE" stroke-width="1.3"/><circle cx="12.6" cy="13" r="1.5" fill="#DCD6E0"/><circle cx="19" cy="18.4" r="2.1" fill="#DCD6E0"/><circle cx="14.4" cy="19.2" r="1.1" fill="#DCD6E0"/>';
   ICONS.moon_half='<circle cx="16" cy="16" r="9" fill="#EFEAE0" stroke="#B4ADBE" stroke-width="1.3"/><path d="M16 7a9 9 0 0 1 0 18Z" fill="#D2CBDA"/>';
@@ -787,13 +794,10 @@
     var t=ymd(new Date());
     main.innerHTML="";
     main.insertAdjacentHTML("beforeend",timeBarHtml());
-    main.insertAdjacentHTML("beforeend",'<div class="todaytog">'+
-      '<button class="ttg'+(todayMode==="context"?" on":"")+'" data-todaymode="context">依情境</button>'+
-      '<button class="ttg'+(todayMode==="order"?" on":"")+'" data-todaymode="order">排順序</button></div>');
-    if(todayMode==="order"){renderOrder(t);return;}
     var mt=document.createElement("div");mt.className="modetop ml-"+MODE_LAYOUT;
     MODES.forEach(function(m){mt.innerHTML+='<button class="mbtn'+(m.k===mode?" on":"")+'" data-mode="'+m.k+'">'+ic(m.ico)+'<span>'+m.name+'</span></button>';});
     main.appendChild(mt);
+    if(mode==="all"){renderOrder(t);return;}
     main.insertAdjacentHTML("beforeend",'<div class="mode-hint">'+MODE[mode].hint+'</div>');
     renderAgenda(t,main);
   }
@@ -1067,8 +1071,6 @@
 
   document.getElementById("tabbar").addEventListener("click",function(e){var b=e.target.closest(".view-btn");if(!b)return;view=b.dataset.view;showOther=false;render();});
   main.addEventListener("click",function(e){
-    var tmb=e.target.closest("[data-todaymode]");
-    if(tmb){todayMode=tmb.dataset.todaymode;saveTodayMode();render();return;}
     var md=e.target.closest("[data-mode]");
     if(md){mode=md.dataset.mode;showOther=false;saveMode(ymd(new Date()),mode);render();return;}
     var br=e.target.closest("[data-breathe]");
