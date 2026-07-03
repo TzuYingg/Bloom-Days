@@ -288,10 +288,15 @@
   .seqn:active{transform:scale(.85);}
 
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  /* 同步狀態小點 */
+  #syncDot{position:absolute;top:28px;right:22px;width:8px;height:8px;border-radius:50%;
+    background:#B9B2A6;opacity:.7;z-index:6;transition:background .3s ease;}
 </style>
 </head>
 <body>
 <div id="app">
+  <div id="syncDot" style="display:none"></div>
   <header>
     <div class="date-line"><span id="date">7月2日</span><span class="dow" id="dow">週四</span></div>
     <div class="daily-msg" id="dailyMsg"></div>
@@ -961,7 +966,7 @@
   var sCat=null,sCup=null,sEng=null,sCtx=[],editId=null;
   (function(){
     var cb=document.getElementById("segCat");CATS.forEach(function(c){cb.innerHTML+='<button data-c="'+c.k+'">'+ic(c.k)+c.name+'</button>';});
-    var xb=document.getElementById("segCtx");MODES.forEach(function(m){xb.innerHTML+='<button data-x="'+m.k+'">'+ic(m.ico)+m.name+'</button>';});
+    var xb=document.getElementById("segCtx");MODES.filter(function(m){return m.k!=="all";}).forEach(function(m){xb.innerHTML+='<button data-x="'+m.k+'">'+ic(m.ico)+m.name+'</button>';});
     var pb=document.getElementById("segCup");CUPS.forEach(function(c){pb.innerHTML+='<button data-v="'+c.v+'">'+ic("cup")+c.t+'</button>';});
     var eb=document.getElementById("segEng");ENGS.forEach(function(e){eb.innerHTML+='<button data-v="'+e.v+'">'+ic("need"+e.v)+e.t+'</button>';});
     var ab=document.getElementById("lAct");LACTS.forEach(function(a){ab.innerHTML+='<button data-la="'+a+'">'+a+'</button>';});
@@ -1154,6 +1159,103 @@
   archiveOld();
   (function carryForward(){var t=ymd(new Date()),ch=false;items.forEach(function(i){if(!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;ch=true;}});if(ch)save();})();
   fmtDateHeader();render();
+
+  /* ======================= 雲端同步（Realtime Database，REST）=======================
+     沿用點貨/備料/茶量同一個資料庫，資料放在獨立的 bloomDays 節點，不會互相干擾。
+     不需任何設定：上傳這支檔案就會自動同步。 */
+  (function(){
+    var DB="https://jenka-inventory-default-rtdb.asia-southeast1.firebasedatabase.app";
+    var URL=DB+"/bloomDays/state.json";
+    var BOOT="bd_sync_boot";                                     // 本機旗標，不進同步
+    var dot=document.getElementById("syncDot");
+    function setStatus(s){if(!dot)return;var map={saving:"#C99A5A",ok:"#7C9A5C",err:"#C05A5A",off:"#B9B2A6"};dot.style.background=map[s]||map.off;}
+    if(!DB){ if(dot)dot.style.display="none"; return; }
+    if(dot)dot.style.display="block"; setStatus("saving");
+
+    var applyingRemote=false, lastPushedJson="", pushT=null, mirror=null, polling=false;
+
+    function isKey(k){return /^lifeos_/.test(k);}
+    function snapshotLocal(){var d={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(isKey(k))d[k]=localStorage.getItem(k);}return d;}
+
+    // 任何存檔都自動觸發雲端推送
+    var _set=localStorage.setItem.bind(localStorage);
+    var _rm=localStorage.removeItem.bind(localStorage);
+    localStorage.setItem=function(k,v){_set(k,v);if(!applyingRemote&&isKey(k))schedulePush();};
+    localStorage.removeItem=function(k){_rm(k);if(!applyingRemote&&isKey(k))schedulePush();};
+
+    function hydrateFromLocal(){
+      mem=null; items=load();
+      mode=loadMode(ymd(new Date()));
+      try{todayMode=localStorage.getItem(TMKEY)||"context";}catch(e){todayMode="context";}
+      RECUR=loadRecur(); words=loadWords(); inbox=loadInbox();
+      hlog=loadH(); rgen=loadRG(); archive=loadArchive();
+    }
+    function applyRemote(data){
+      applyingRemote=true;
+      var localKeys=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(isKey(k))localKeys.push(k);}
+      localKeys.forEach(function(k){if(!(k in data))_rm(k);});          // 遠端整組刪掉的才刪
+      Object.keys(data).forEach(function(k){_set(k,data[k]);});
+      hydrateFromLocal(); applyingRemote=false; render();
+    }
+
+    // 首次採用時的一次性聯集合併，避免兩台各自的舊資料被覆蓋掉
+    function tryParse(s){try{return JSON.parse(s);}catch(e){return s;}}
+    function unionArr(a,b){var out=[],seen={};function add(x){var key=(x&&typeof x==="object"&&("id" in x))?("#"+x.id):JSON.stringify(x);if(seen[key])return;seen[key]=1;out.push(x);}b.forEach(add);a.forEach(add);return out;}
+    function mergeObj(a,b){var out={},k;for(k in a)out[k]=a[k];for(k in b){if(!(k in out)){out[k]=b[k];continue;}var av=out[k],bv=b[k];if(av&&bv&&typeof av==="object"&&typeof bv==="object"&&!Array.isArray(av)&&!Array.isArray(bv)){var m={},kk;for(kk in av)m[kk]=av[kk];for(kk in bv){m[kk]=(typeof av[kk]==="number"&&typeof bv[kk]==="number")?Math.max(av[kk],bv[kk]):bv[kk];}out[k]=m;}else{out[k]=bv;}}return out;}
+    function mergeStates(a,b){var out={},keys={},x;for(x in a)keys[x]=1;for(x in b)keys[x]=1;Object.keys(keys).forEach(function(k){if(a[k]==null){out[k]=b[k];return;}if(b[k]==null){out[k]=a[k];return;}var pa=tryParse(a[k]),pb=tryParse(b[k]);if(Array.isArray(pa)&&Array.isArray(pb)){out[k]=JSON.stringify(unionArr(pa,pb));}else if(pa&&pb&&typeof pa==="object"&&typeof pb==="object"){out[k]=JSON.stringify(mergeObj(pa,pb));}else{out[k]=b[k];}});return out;}
+    function booted(){try{return localStorage.getItem(BOOT)==="1";}catch(e){return false;}}
+    function markBooted(){try{_set(BOOT,"1");}catch(e){}}
+
+    function doPush(){
+      var data=snapshotLocal(); lastPushedJson=JSON.stringify(data); setStatus("saving");
+      fetch(URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})
+        .then(function(r){setStatus(r.ok?"ok":"err");}).catch(function(){setStatus("err");});
+    }
+    function schedulePush(){clearTimeout(pushT);setStatus("saving");pushT=setTimeout(doPush,600);}
+
+    function onRemoteState(state){
+      state=state||{};
+      if(!booted()){
+        if(!Object.keys(state).length){markBooted();doPush();return;}   // 雲端還沒資料 → 把本機推上去
+        var merged=mergeStates(snapshotLocal(),state);                  // 第一次連上：本機 ∪ 雲端，不丟資料
+        markBooted(); applyRemote(merged); doPush(); return;
+      }
+      if(!Object.keys(state).length){                                   // 雲端空但本機有 → 用本機補回，不清空
+        if(Object.keys(snapshotLocal()).length)doPush(); return;
+      }
+      var rjson=JSON.stringify(state);
+      if(rjson===lastPushedJson){setStatus("ok");return;}               // 自己寫入的回音
+      applyRemote(state); setStatus("ok");                              // 真正的遠端更新 → 套用
+    }
+
+    // 定時回抓（EventSource 不可用時的後備）
+    function startPoll(){if(polling)return;polling=true;setInterval(function(){fetch(URL).then(function(r){return r.ok?r.json():null;}).then(function(d){onRemoteState(d);}).catch(function(){});},12000);}
+
+    // 即時串流：某台一改，其他裝置當下就更新
+    function startStream(){
+      if(typeof EventSource==="undefined"){startPoll();return;}
+      var es;try{es=new EventSource(URL);}catch(e){startPoll();return;}
+      function onEv(ev){
+        setStatus("ok");
+        try{
+          var o=JSON.parse(ev.data); if(!o)return;
+          var path=o.path, data=o.data;
+          if(mirror==null)mirror={};
+          if(path==="/"){ mirror=(data&&typeof data==="object")?data:{}; }
+          else { var key=path.replace(/^\//,""); if(data===null)delete mirror[key]; else mirror[key]=data; }
+          onRemoteState(mirror);
+        }catch(e){}
+      }
+      es.addEventListener("put",onEv);
+      es.addEventListener("patch",onEv);
+      es.onerror=function(){ if(es.readyState===2)startPoll(); };       // 串流被擋才改用定時回抓
+    }
+
+    // 先抓一次目前雲端狀態（保證首次同步），再開即時串流
+    fetch(URL).then(function(r){return r.ok?r.json():null;})
+      .then(function(d){onRemoteState(d);startStream();})
+      .catch(function(){setStatus("err");startStream();});
+  })();
 })();
 </script>
 </body>
