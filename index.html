@@ -225,14 +225,90 @@
   .weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;}
   .weekdays span{text-align:center;font-size:11px;color:var(--muted);padding:4px 0;}
   .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-  .cell{aspect-ratio:1;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:12px;color:var(--ink);font-size:14px;transition:background .18s ease;position:relative;}
+  .cell{min-height:58px;max-height:92px;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:2px;border-radius:10px;color:var(--ink);font-size:14px;transition:background .18s ease;position:relative;padding:4px 3px 5px;text-align:left;overflow:hidden;}
   .cell.other{color:var(--hair);}
-  .cell.today .num{background:var(--accent);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;}
+  .cell.today .num{background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;}
   .cell.sel{background:var(--accent-soft);}
-  .cell .num{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;}
+  .cell .num{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-size:12px;flex:none;}
+  .cell-top{display:flex;align-items:center;justify-content:space-between;flex:none;}
+  .cell-due{width:5px;height:5px;border-radius:50%;border:1.3px solid #B8AE9C;box-sizing:border-box;flex:none;margin-right:2px;}
+  .cell-tasks{display:flex;flex-direction:column;gap:1.5px;margin-top:1px;overflow:hidden;}
+  .cell-task{display:flex;align-items:center;gap:4px;overflow:hidden;}
+  .ct-dot{width:4px;height:4px;border-radius:50%;flex:none;}
+  .ct-txt{font-size:9px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;}
+  .cell-task.done .ct-txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--hair);}
+  .cell-more{font-size:8.5px;color:var(--muted);margin-top:1px;}
+  .ct-arrow{font-size:8px;color:var(--muted);flex:none;}
+  .cal-legend{display:flex;gap:14px;padding:0 4px 12px;flex-wrap:wrap;}
+  .lg-item{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);}
+  .lg-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block;}
+  .lg-arrow{font-size:9px;}
   .pips{display:flex;gap:3px;height:5px;}
   .pip{width:5px;height:5px;border-radius:50%;}
   .cal-sub{font-size:12px;color:var(--muted);padding:20px 4px 10px;letter-spacing:.04em;}
+
+  /* 日曆三分頁：年目標／月曆／週曆 */
+  .calsub{display:flex;gap:4px;background:var(--hair);border-radius:12px;padding:3px;margin-bottom:14px;}
+  .calsub button{flex:1;border:none;background:none;padding:8px 0;font-size:12.5px;color:var(--muted);border-radius:9px;font-family:inherit;cursor:pointer;transition:all .16s ease;}
+  .calsub button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow-sm);}
+
+  /* 月主題橫幅 */
+  .theme-band{background:var(--card);border-radius:14px;padding:11px 13px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+  .tb-head{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;}
+  .tb-label{font-family:"Noto Serif TC",serif;font-size:13px;color:var(--ink);line-height:1.5;}
+  .tb-chev{font-size:11px;color:var(--muted);flex:none;}
+  .tb-full{margin-top:10px;}
+  .tb-full textarea{width:100%;border:none;background:var(--cream);border-radius:10px;padding:10px;font-family:"Noto Serif TC",serif;font-size:12.5px;color:var(--ink);resize:none;min-height:52px;outline:none;}
+  .mg-list{margin-top:9px;}
+  .mg-row{display:flex;align-items:center;gap:8px;margin-top:6px;}
+  .mg-check{width:16px;height:16px;border:1.3px solid var(--muted);border-radius:50%;flex:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;}
+  .mg-check.on{background:var(--accent);border-color:var(--accent);}
+  .mg-text{flex:1;font-size:12.5px;color:var(--ink);}
+  .mg-text.done{color:var(--muted);text-decoration:line-through;}
+  .mg-add{display:flex;gap:6px;margin-top:9px;}
+  .mg-add input{flex:1;border:none;background:var(--cream);border-radius:9px;padding:8px 10px;font-family:inherit;font-size:12px;color:var(--ink);outline:none;}
+  .mg-add button{border:none;background:var(--accent-soft);color:var(--accent);border-radius:9px;padding:0 13px;font-family:inherit;font-size:14px;cursor:pointer;}
+
+  /* 必須做／順手做 */
+  .mustdo-label,.easydo-label{font-family:"Noto Serif TC",serif;font-size:11.5px;color:var(--muted);margin:16px 2px 8px;}
+  .mustdo-hint{font-size:11.5px;color:var(--muted);background:var(--card);border-radius:12px;padding:10px 13px;margin-bottom:8px;line-height:1.6;}
+  .migrate-tag{font-size:10.5px;color:var(--muted);margin-top:5px;letter-spacing:.02em;}
+  .migrate-pull{color:var(--accent);margin-left:8px;cursor:pointer;}
+
+  /* 週曆 */
+  .lifefilter{display:flex;gap:4px;margin-bottom:12px;}
+  .lifefilter button{border:none;background:none;font-family:inherit;font-size:11px;color:var(--muted);padding:5px 12px;border-radius:20px;cursor:pointer;}
+  .lifefilter button.on{background:var(--card);color:var(--ink);}
+  .weekrow{display:flex;gap:12px;padding:10px 3px;border-bottom:1px solid var(--hair);}
+  .weekrow:last-of-type{border-bottom:none;}
+  .weekrow.sel{background:var(--accent-soft);border-radius:10px;}
+  .wk-card{display:flex;gap:14px;background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:box-shadow .2s ease;}
+  .wk-card.today{box-shadow:var(--shadow);position:relative;}
+  .wk-card.today::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:3px;background:var(--accent);}
+  .wk-day{width:38px;flex:none;display:flex;flex-direction:column;gap:3px;padding-top:1px;}
+  .wk-dow{font-family:"Noto Serif TC",serif;font-size:14.5px;color:var(--ink);}
+  .wk-date{font-size:10.5px;color:var(--muted);letter-spacing:.02em;}
+  .wk-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;}
+  .wk-empty{font-size:12.5px;color:var(--muted);opacity:.7;}
+  .wk-item{display:flex;align-items:flex-start;gap:10px;}
+  .wk-box{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--muted);flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;}
+  .wk-title{flex:1;font-size:13px;color:var(--ink);line-height:1.6;cursor:pointer;}
+  .wk-item.done .wk-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--hair);}
+  .week-note{background:var(--card);border-radius:14px;padding:11px 13px;margin-top:14px;}
+  .wn-label{font-family:"Noto Serif TC",serif;font-size:11.5px;color:var(--muted);margin-bottom:4px;}
+  .week-note textarea{width:100%;border:none;background:none;font-family:"Noto Serif TC",serif;font-size:12px;color:var(--ink);resize:none;min-height:46px;outline:none;padding:0;}
+
+  /* 年目標 */
+  .yearpage{background-image:radial-gradient(rgba(58,54,47,.11) .6px, transparent .6px);background-size:14px 14px;border-radius:14px;padding:14px 10px;}
+  .yr-keyword-input{font-family:"Noto Serif TC",serif;font-size:21px;color:var(--ink);border:none;background:none;width:100%;padding:0;outline:none;}
+  .yr-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .yr-vision{width:100%;border:none;background:transparent;font-family:"Noto Serif TC",serif;font-size:12.5px;color:var(--ink);line-height:1.8;margin-top:10px;padding-bottom:12px;border-bottom:1px solid var(--hair);resize:none;min-height:52px;outline:none;}
+  .quads{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+  .qcard{background:var(--card);border-radius:12px;padding:10px 11px;}
+  .qcard.now{box-shadow:var(--shadow);}
+  .qlabel{font-family:"Noto Serif TC",serif;font-size:11px;color:var(--muted);margin-bottom:5px;}
+  .qmonth{font-size:11px;color:var(--ink);line-height:2;}
+  .qmonth input{width:78%;border:none;background:transparent;font-family:inherit;font-size:11px;color:var(--ink);padding:0;outline:none;}
 
   .fab{position:absolute;right:22px;bottom:calc(80px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:30px;font-weight:300;line-height:1;box-shadow:0 8px 22px rgba(78,64,48,.22);transition:background .4s ease,transform .12s ease;display:flex;align-items:center;justify-content:center;padding-bottom:3px;}
   .fab:active{transform:scale(.94);}
@@ -333,6 +409,26 @@
   /* 同步狀態小點 */
   #syncDot{position:absolute;top:28px;right:22px;width:8px;height:8px;border-radius:50%;
     background:#B9B2A6;opacity:.7;z-index:6;transition:background .3s ease;}
+
+  /* 寬螢幕／桌面版：月曆頁可以攤開得更滿 */
+  @media(min-width:720px){
+    #app{max-width:1040px;}
+    header{padding:26px 40px 10px;}
+    main{padding:16px 40px calc(150px + env(safe-area-inset-bottom));}
+    .calsub,.theme-band,.cal-head,.weekdays,.cal-sub,.lifefilter,.wk-card,.week-note,.yearpage{max-width:760px;margin-left:auto;margin-right:auto;}
+    .grid{max-width:760px;margin:0 auto;gap:6px;}
+    .cell{min-height:118px;max-height:168px;padding:8px 8px 7px;border-radius:12px;}
+    .cell .num{width:24px;height:24px;font-size:13px;}
+    .cell-tasks{gap:3px;margin-top:3px;}
+    .cell-task{gap:6px;}
+    .ct-dot{width:5px;height:5px;}
+    .ct-txt{font-size:11.5px;}
+    .ct-arrow{font-size:10px;}
+    .cal-legend{max-width:760px;margin:0 auto;padding-bottom:14px;}
+    .lg-item{font-size:12px;}
+    .lg-dot{width:8px;height:8px;}
+    .cell-more{font-size:10.5px;margin-top:2px;}
+  }
 </style>
 </head>
 <body>
@@ -572,6 +668,27 @@
   function saveMode(dateStr,m){try{localStorage.setItem(MKEY+dateStr,m);}catch(e){}}
 
   var view="bloom", sel=new Date(), calMonth=new Date(), showOther=false;
+  var calSub="month", weekAnchor=new Date(), yearAnchor=new Date().getFullYear(), goalOpen=false, lifeFilter="all";
+  var MUSTCAP=5;
+  var WORKCATS=["advance","maintain"], LIFECATS=["connect","recharge"];
+  function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function lifeMatch(cat,f){if(f==="all")return true;if(!cat)return true;var inWork=WORKCATS.indexOf(cat)>=0,inLife=LIFECATS.indexOf(cat)>=0;if(!inWork&&!inLife)return true;if(f==="work")return inWork;if(f==="life")return inLife;return true;}
+  function mondayOf(d){var day=(d.getDay()+6)%7,m=new Date(d);m.setDate(d.getDate()-day);return m;}
+  function weekKey(d){return ymd(mondayOf(d));}
+  var MGKEY="lifeos_monthgoals",YGKEY="lifeos_yeargoals",WNKEY="lifeos_weeknotes";
+  function loadMG(){try{return JSON.parse(localStorage.getItem(MGKEY)||"{}");}catch(e){return{};}}
+  function saveMG(){try{localStorage.setItem(MGKEY,JSON.stringify(monthGoals));}catch(e){}}
+  var monthGoals=loadMG();
+  function loadYG(){try{return JSON.parse(localStorage.getItem(YGKEY)||"{}");}catch(e){return{};}}
+  function saveYG(){try{localStorage.setItem(YGKEY,JSON.stringify(yearGoals));}catch(e){}}
+  var yearGoals=loadYG();
+  function loadWN(){try{return JSON.parse(localStorage.getItem(WNKEY)||"{}");}catch(e){return{};}}
+  function saveWN(){try{localStorage.setItem(WNKEY,JSON.stringify(weekNotes));}catch(e){}}
+  var weekNotes=loadWN();
+  function mgKey(y,m){return y+"-"+String(m+1).padStart(2,"0");}
+  function getMG(y,m){var k=mgKey(y,m);if(!monthGoals[k])monthGoals[k]={theme:"",list:[]};return monthGoals[k];}
+  function getYG(y){var k=String(y);if(!yearGoals[k])yearGoals[k]={keyword:"",vision:"",months:{}};return yearGoals[k];}
+  function getWN(d){return weekNotes[weekKey(d)]||"";}
   var flashHab=null, bloomBurst=null;
   var items=load(), mode=loadMode(ymd(new Date()));
   var TMKEY="lifeos_todaymode";
@@ -1019,12 +1136,16 @@
     var n=daysUntil(it.due);if(n===null||n>7)return"";
     return '<div class="due-note'+(n<=1?" soon":"")+'">'+ic("due")+dueLabel(n)+'</div>';
   }
+  function migrateHtml(it){
+    if(!it.migrated||it.done)return"";
+    return '<div class="migrate-tag">➔ 從前面過來的事'+(it.star?"":'<span class="migrate-pull" data-migratepull="'+it.id+'">拉進必須做</span>')+'</div>';
+  }
   function rowHtml(it){
     var color=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--accent)";
     var row=document.createElement("div");row.className="row"+(it.done?" done":"");
     row.style.color=color;
     row.innerHTML='<div class="dot" data-toggle="'+it.id+'" style="border-color:'+color+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
-      '<div class="row-body" data-edit="'+it.id+'">'+(it.time?'<div class="row-time">'+it.time+'</div>':'')+'<div class="row-title" style="color:var(--ink)"></div>'+metaHtml(it)+dueHtml(it)+'</div>'+
+      '<div class="row-body" data-edit="'+it.id+'">'+(it.time?'<div class="row-time">'+it.time+'</div>':'')+'<div class="row-title" style="color:var(--ink)"></div>'+metaHtml(it)+dueHtml(it)+migrateHtml(it)+'</div>'+
       '<button class="row-del" data-del="'+it.id+'">×</button>';
     row.querySelector(".row-title").textContent=it.title;
     if(it.done)row.querySelector(".row-title").style.color="var(--muted)";
@@ -1051,6 +1172,16 @@
     }
     if(!list.length){
       host.insertAdjacentHTML("beforeend",'<div class="empty"><span class="big">這個情境沒有事</span>輕鬆一下也好</div>');
+    }else if(view==="today"){
+      var must=list.filter(function(i){return i.star;});
+      var easy=list.filter(function(i){return !i.star;});
+      if(must.length>MUSTCAP)host.insertAdjacentHTML("beforeend",'<div class="mustdo-hint">今天的大事，通常留 3-5 件就好。</div>');
+      host.insertAdjacentHTML("beforeend",'<div class="mustdo-label">必須做</div>');
+      if(must.length){var w1=document.createElement("div");w1.className="agenda";must.forEach(function(it){w1.appendChild(rowHtml(it));});host.appendChild(w1);}
+      else{host.insertAdjacentHTML("beforeend",'<div class="mustdo-hint">還沒有標「今日焦點」的事，編輯事情時可以把它放進來。</div>');}
+      host.insertAdjacentHTML("beforeend",'<div class="easydo-label">順手做</div>');
+      if(easy.length){var w2b=document.createElement("div");w2b.className="agenda";easy.forEach(function(it){w2b.appendChild(rowHtml(it));});host.appendChild(w2b);}
+      else{host.insertAdjacentHTML("beforeend",'<div class="mustdo-hint">沒有其他事了。</div>');}
     }else{
       var wrap=document.createElement("div");wrap.className="agenda";
       list.forEach(function(it){wrap.appendChild(rowHtml(it));});
@@ -1069,32 +1200,129 @@
   }
 
   function renderCalendar(){
+    var bar=document.createElement("div");bar.className="calsub";
+    [["year","年目標"],["month","月曆"],["week","週曆"]].forEach(function(t){
+      bar.innerHTML+='<button class="'+(calSub===t[0]?"on":"")+'" data-calsub="'+t[0]+'">'+t[1]+'</button>';
+    });
+    main.appendChild(bar);
+    if(calSub==="year"){renderCalYear();}
+    else if(calSub==="week"){renderCalWeek();}
+    else{renderCalMonthView();}
+  }
+
+  function mgListHtml(mg,key){
+    var h='<div class="mg-list">';
+    (mg.list||[]).forEach(function(it){
+      h+='<div class="mg-row"><span class="mg-check'+(it.done?" on":"")+'" data-mgtoggle="'+key+'|'+it.id+'">'+(it.done?"✓":"")+'</span><span class="mg-text'+(it.done?" done":"")+'">'+esc(it.text)+'</span><button class="row-del" data-mgdel="'+key+'|'+it.id+'" style="position:static;">×</button></div>';
+    });
+    h+='<div class="mg-add"><input type="text" placeholder="新增這個月的目標" data-mgin="'+key+'"><button class="row-del" data-mgaddbtn="'+key+'" style="position:static;">＋</button></div></div>';
+    return h;
+  }
+
+  function renderCalMonthView(){
     var y=calMonth.getFullYear(),m=calMonth.getMonth();
-    var start=new Date(y,m,1).getDay(),daysIn=new Date(y,m+1,0).getDate();
+    var mg=getMG(y,m),mk=mgKey(y,m);
+    var band=document.createElement("div");band.className="theme-band";
+    if(goalOpen){
+      band.innerHTML='<div class="tb-head" data-goalband="1"><span class="tb-label">'+(m+1)+'月主題</span><span class="tb-chev">▴</span></div>'+
+        '<div class="tb-full"><textarea data-savefield="monthTheme" data-mkey="'+mk+'" placeholder="這個月，想往哪裡走…">'+esc(mg.theme)+'</textarea>'+mgListHtml(mg,mk)+'</div>';
+    }else{
+      band.innerHTML='<div class="tb-head" data-goalband="1"><span class="tb-label">'+(m+1)+'月：'+(mg.theme?esc(mg.theme):"點一下，寫下這個月的主題")+'</span><span class="tb-chev">▾</span></div>';
+    }
+    main.appendChild(band);
+    var start=(new Date(y,m,1).getDay()+6)%7,daysIn=new Date(y,m+1,0).getDate();
     var todayStr=ymd(new Date()),selStr=ymd(sel);
     var head=document.createElement("div");head.className="cal-head";
     head.innerHTML='<button class="cal-nav" data-mv="-1">‹</button><div class="cal-month">'+y+'年 '+(m+1)+'月</div><button class="cal-nav" data-mv="1">›</button>';
     main.appendChild(head);
     var wk=document.createElement("div");wk.className="weekdays";
-    ["日","一","二","三","四","五","六"].forEach(function(d){wk.innerHTML+="<span>"+d+"</span>";});
+    ["一","二","三","四","五","六","日"].forEach(function(d){wk.innerHTML+="<span>"+d+"</span>";});
     main.appendChild(wk);
+    var legend=document.createElement("div");legend.className="cal-legend";
+    legend.innerHTML='<span class="lg-item"><span class="lg-dot"></span>已完成會加上刪除線</span><span class="lg-item"><span class="lg-arrow">➔</span>遞延</span>';
+    main.appendChild(legend);
     var grid=document.createElement("div");grid.className="grid";
     var prev=new Date(y,m,0).getDate();
     for(var i=0;i<start;i++)grid.innerHTML+='<div class="cell other"><span class="num">'+(prev-start+1+i)+'</span></div>';
     for(var d=1;d<=daysIn;d++){
       var ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
       var day=items.filter(function(x){return x.date===ds;});
-      var cats=[];day.forEach(function(x){if(x.cat&&cats.indexOf(x.cat)<0)cats.push(x.cat);});
-      var pips="";cats.slice(0,3).forEach(function(c){pips+='<span class="pip" style="background:'+CAT[c].color+'"></span>';});
-      if(items.some(function(x){return x.due===ds;}))pips+='<span class="pip due"></span>';
+      var dueHere=items.some(function(x){return x.due===ds;});
+      var titles=day.map(function(x){
+        var color=x.cat&&CAT[x.cat]?CAT[x.cat].color:"var(--muted)";
+        var mig=(x.migrated&&!x.done)?'<span class="ct-arrow">➔</span>':"";
+        return '<div class="cell-task'+(x.done?" done":"")+'"><span class="ct-dot" style="background:'+color+'"></span>'+mig+'<span class="ct-txt">'+esc(x.title)+'</span></div>';
+      }).join("");
       var cls="cell"+(ds===todayStr?" today":"")+(ds===selStr?" sel":"");
-      grid.innerHTML+='<button class="'+cls+'" data-day="'+ds+'"><span class="num">'+d+'</span><span class="pips">'+pips+'</span></button>';
+      grid.innerHTML+='<button class="'+cls+'" data-day="'+ds+'"><div class="cell-top"><span class="num">'+d+'</span>'+(dueHere?'<span class="cell-due"></span>':'')+'</div><div class="cell-tasks">'+titles+'</div></button>';
     }
     main.appendChild(grid);
     var sub=document.createElement("div");sub.className="cal-sub";
     sub.textContent=(sel.getMonth()+1)+"月"+sel.getDate()+"日";
     main.appendChild(sub);
     renderAgenda(selStr);
+  }
+
+  function renderCalWeek(){
+    var mon=mondayOf(weekAnchor);
+    var days=[];for(var i=0;i<7;i++){var dd=new Date(mon);dd.setDate(mon.getDate()+i);days.push(dd);}
+    var head=document.createElement("div");head.className="cal-head";
+    head.innerHTML='<button class="cal-nav" data-weeknav="-1">‹</button><div class="cal-month">'+(mon.getMonth()+1)+'月'+mon.getDate()+'日－'+(days[6].getMonth()+1)+'月'+days[6].getDate()+'日</div><button class="cal-nav" data-weeknav="1">›</button>';
+    main.appendChild(head);
+    var lf=document.createElement("div");lf.className="lifefilter";
+    [["all","全部"],["work","工作"],["life","生活"]].forEach(function(f){lf.innerHTML+='<button class="'+(lifeFilter===f[0]?"on":"")+'" data-lifefilter="'+f[0]+'">'+f[1]+'</button>';});
+    main.appendChild(lf);
+    var todayStr=ymd(new Date());
+    var CHECK='<svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M20 6 9 17l-5-5"/></svg>';
+    days.forEach(function(d){
+      var ds=ymd(d);
+      var dayItems=itemsFor(ds).filter(function(it){return lifeMatch(it.cat,lifeFilter);});
+      var card=document.createElement("div");card.className="wk-card"+(ds===todayStr?" today":"");
+      var body;
+      if(!dayItems.length){body='<div class="wk-empty">沒有安排</div>';}
+      else{
+        body=dayItems.map(function(it){
+          var color=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--muted)";
+          var box=it.done
+            ?'<span class="wk-box done" data-toggle="'+it.id+'" style="background:'+color+';border-color:'+color+';">'+CHECK+'</span>'
+            :'<span class="wk-box" data-toggle="'+it.id+'" style="border-color:'+color+';"></span>';
+          var mig=(it.migrated&&!it.done)?'<div class="migrate-tag">➔ 從前面過來</div>':"";
+          return '<div class="wk-item'+(it.done?" done":"")+'">'+box+'<span class="wk-title" data-edit="'+it.id+'">'+esc(it.title)+mig+'</span></div>';
+        }).join("");
+      }
+      card.innerHTML='<div class="wk-day"><span class="wk-dow">'+DOW[d.getDay()]+'</span><span class="wk-date">'+(d.getMonth()+1)+'/'+d.getDate()+'</span></div><div class="wk-body">'+body+'</div>';
+      main.appendChild(card);
+    });
+    var wn=document.createElement("div");wn.className="week-note";
+    wn.innerHTML='<div class="wn-label">本週迷人小事</div><textarea data-savefield="weekNote" data-wkey="'+weekKey(mon)+'" placeholder="點一下寫點什麼…">'+esc(getWN(mon))+'</textarea>';
+    main.appendChild(wn);
+  }
+
+
+  function renderCalYear(){
+    var y=yearAnchor;
+    var yg=getYG(y);
+    var wrap=document.createElement("div");wrap.className="yearpage";
+    var head='<div class="cal-head" style="padding-top:0;"><button class="cal-nav" data-yrnav="-1">‹</button><div class="cal-month">'+y+'年目標</div><button class="cal-nav" data-yrnav="1">›</button></div>';
+    var kw='<input class="yr-keyword-input" data-savefield="yearKeyword" data-ykey="'+y+'" value="'+esc(yg.keyword)+'" placeholder="年度關鍵字">';
+    var sub='<div class="yr-sub">'+y+' 年度關鍵字</div>';
+    var vis='<textarea class="yr-vision" data-savefield="yearVision" data-ykey="'+y+'" placeholder="這一年，想往哪裡走…">'+esc(yg.vision)+'</textarea>';
+    wrap.innerHTML=head+kw+sub+vis+'<div class="quads"></div>';
+    main.appendChild(wrap);
+    var quads=wrap.querySelector(".quads");
+    var qLabels=[["Q1",[1,2,3]],["Q2",[4,5,6]],["Q3",[7,8,9]],["Q4",[10,11,12]]];
+    var curM=new Date().getMonth()+1, curY=new Date().getFullYear();
+    qLabels.forEach(function(q){
+      var isNow=(y===curY)&&q[1].indexOf(curM)>=0;
+      var card=document.createElement("div");card.className="qcard"+(isNow?" now":"");
+      var inner='<div class="qlabel">'+q[0]+(isNow?" ・現在":"")+'</div>';
+      q[1].forEach(function(mn){
+        var val=(yg.months&&yg.months[mn])?yg.months[mn]:"";
+        inner+='<div class="qmonth">'+mn+'月 <input data-savefield="yearMonth" data-ykey="'+y+'" data-mnum="'+mn+'" value="'+esc(val)+'" placeholder=""></div>';
+      });
+      card.innerHTML=inner;
+      quads.appendChild(card);
+    });
   }
 
   // sheet
@@ -1267,6 +1495,34 @@
     if(nav){calMonth.setMonth(calMonth.getMonth()+(+nav.dataset.mv));genRecurring(calMonth.getFullYear(),calMonth.getMonth());render();return;}
     var day=e.target.closest("[data-day]");
     if(day){sel=new Date(day.dataset.day+"T00:00:00");render();return;}
+    var mgt=e.target.closest("[data-mgtoggle]");
+    if(mgt){var mgp=mgt.dataset.mgtoggle.split("|"),mgo=monthGoals[mgp[0]];if(mgo){var git=(mgo.list||[]).find(function(x){return String(x.id)===mgp[1];});if(git){git.done=!git.done;saveMG();render();}}return;}
+    var mgd=e.target.closest("[data-mgdel]");
+    if(mgd){var mdp=mgd.dataset.mgdel.split("|"),mgo2=monthGoals[mdp[0]];if(mgo2){mgo2.list=(mgo2.list||[]).filter(function(x){return String(x.id)!==mdp[1];});saveMG();render();}return;}
+    var mga=e.target.closest("[data-mgaddbtn]");
+    if(mga){var mk=mga.dataset.mgaddbtn,inp=document.querySelector('[data-mgin="'+mk+'"]'),mv=inp?inp.value.trim():"";if(!mv)return;var mgo3=monthGoals[mk];if(!mgo3){mgo3={theme:"",list:[]};monthGoals[mk]=mgo3;}mgo3.list=mgo3.list||[];mgo3.list.push({id:Date.now(),text:mv,done:false});saveMG();render();return;}
+    var gb=e.target.closest("[data-goalband]");
+    if(gb){goalOpen=!goalOpen;render();return;}
+    var cs=e.target.closest("[data-calsub]");
+    if(cs){calSub=cs.dataset.calsub;render();return;}
+    var lf=e.target.closest("[data-lifefilter]");
+    if(lf){lifeFilter=lf.dataset.lifefilter;render();return;}
+    var wn=e.target.closest("[data-weeknav]");
+    if(wn){weekAnchor.setDate(weekAnchor.getDate()+7*(+wn.dataset.weeknav));render();return;}
+    var yn=e.target.closest("[data-yrnav]");
+    if(yn){yearAnchor+=(+yn.dataset.yrnav);render();return;}
+    var mp=e.target.closest("[data-migratepull]");
+    if(mp){var mit=items.find(function(x){return x.id===+mp.dataset.migratepull;});if(mit){mit.star=true;save();render();}return;}
+  });
+  main.addEventListener("change",function(e){
+    var sf=e.target.closest("[data-savefield]");
+    if(!sf)return;
+    var f=sf.dataset.savefield,v=sf.value;
+    if(f==="monthTheme"){var mg=monthGoals[sf.dataset.mkey];if(!mg){mg={theme:"",list:[]};monthGoals[sf.dataset.mkey]=mg;}mg.theme=v;saveMG();}
+    else if(f==="yearKeyword"){getYG(+sf.dataset.ykey).keyword=v;saveYG();}
+    else if(f==="yearVision"){getYG(+sf.dataset.ykey).vision=v;saveYG();}
+    else if(f==="yearMonth"){var yg=getYG(+sf.dataset.ykey);yg.months=yg.months||{};yg.months[sf.dataset.mnum]=v;saveYG();}
+    else if(f==="weekNote"){weekNotes[sf.dataset.wkey]=v;saveWN();}
   });
   document.getElementById("segCat").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sCat=toggleSeg("segCat",b,sCat,b.dataset.c);});
   document.getElementById("segCup").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sCup=toggleSeg("segCup",b,sCup,+b.dataset.v);});
@@ -1300,7 +1556,7 @@
 
   genRecurring(new Date().getFullYear(),new Date().getMonth());
   archiveOld();
-  (function carryForward(){var t=ymd(new Date()),ch=false;items.forEach(function(i){if(!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;ch=true;}});if(ch)save();})();
+  (function carryForward(){var t=ymd(new Date()),ch=false;items.forEach(function(i){if(!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;i.migrated=true;ch=true;}});if(ch)save();})();
   fmtDateHeader();render();
 
   /* ======================= 雲端同步（Realtime Database，REST）=======================
