@@ -1592,6 +1592,7 @@
     if(mt){moodOpen=!moodOpen;render();return;}
     var ms=e.target.closest("[data-moodset]");
     if(ms){moodLog[ymd(new Date())]=ms.dataset.moodset;saveMoodLog();moodOpen=false;render();return;}
+    var gt=e.target.closest("[data-goto]");
     if(gt){view=gt.dataset.goto;showOther=false;render();return;}
     var fst=e.target.closest("[data-featstar]");
     if(fst){toggleFeat(fst.dataset.featstar);return;}
