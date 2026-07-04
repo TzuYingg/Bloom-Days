@@ -709,15 +709,7 @@
   function save(){try{localStorage.setItem(KEY,JSON.stringify(items));}catch(e){}}
   function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
   function seed(){
-    var t=ymd(new Date()), d2=ymd(new Date(Date.now()+2*86400000));
-    return [
-      {id:1,cat:"advance", date:t,time:"",cup:2,eng:3,title:"排下週班表",due:d2,done:false},
-      {id:2,cat:"maintain",date:t,time:"11:30",cup:1,eng:2,title:"叫貨、對帳",due:"",done:true},
-      {id:3,cat:"connect", date:t,time:"",cup:2,eng:1,title:"陪孩子散步",due:"",done:false},
-      {id:4,cat:"growth",  date:t,time:"",cup:1,eng:2,title:"讀英文十分鐘",due:t,done:false},
-      {id:5,cat:"recharge",date:t,time:"21:00",cup:2,eng:1,title:"泡澡、看一集劇",due:"",done:false},
-      {id:6,cat:"create",  date:t,time:"",cup:3,eng:4,title:"想新貼圖的點子",due:"",done:false}
-    ];
+    return [];
   }
   function loadMode(dateStr){try{return localStorage.getItem(MKEY+dateStr)||"focus";}catch(e){return "focus";}}
   function saveMode(dateStr,m){try{localStorage.setItem(MKEY+dateStr,m);}catch(e){}}
