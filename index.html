@@ -110,7 +110,8 @@
 
   .agenda{display:flex;flex-direction:column;gap:12px;}
   .row-wrap{position:relative;overflow:hidden;border-radius:var(--radius);}
-  .row-swipebg{position:absolute;top:0;right:0;bottom:0;width:64px;background:#C87B86;display:flex;align-items:center;justify-content:center;color:#fff;}
+  .row-swipebg{position:absolute;top:0;right:0;bottom:0;width:64px;background:#C87B86;display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;pointer-events:none;transition:opacity .15s ease;}
+  .row-wrap.swiped .row-swipebg,.row-wrap.dragging .row-swipebg{opacity:1;pointer-events:auto;}
   .row-swipebg svg{width:20px;height:20px;}
   .row{display:flex;align-items:flex-start;gap:14px;background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);animation:rise .35s ease both;position:relative;z-index:1;touch-action:pan-y;transition:transform .22s cubic-bezier(.22,.61,.36,1);}
   @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
@@ -250,6 +251,9 @@
   .ct-chip.done{opacity:.5;text-decoration:line-through;}
   .ct-chip.more{background:none;color:var(--muted);font-weight:400;padding:1px 5px;}
   .ct-chip.event{font-weight:600;}
+  .ct-chip.event.seg-start{border-radius:5px 0 0 5px;margin-left:-3px;padding-left:6px;}
+  .ct-chip.event.seg-mid{border-radius:0;margin-left:-3px;margin-right:-3px;padding-left:6px;padding-right:6px;}
+  .ct-chip.event.seg-end{border-radius:0 5px 5px 0;margin-right:-3px;padding-right:6px;}
   .cal-legend{display:flex;gap:14px;padding:0 4px 12px;flex-wrap:wrap;}
   .lg-item{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);}
   .lg-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block;}
@@ -346,7 +350,18 @@
   .scrim.open{opacity:1;pointer-events:auto;}
   .sheet{position:absolute;left:0;right:0;bottom:0;z-index:6;background:var(--cream);border-radius:26px 26px 0 0;padding:24px 22px calc(20px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .3s cubic-bezier(.22,.61,.36,1);box-shadow:0 -10px 34px rgba(78,64,48,.14);max-height:90dvh;overflow-y:auto;}
   .sheet.open{transform:translateY(0);}
-  .sheet h3{font-family:"Noto Serif TC",serif;font-weight:500;font-size:18px;margin-bottom:16px;}
+  .sheet h3{font-family:"Noto Serif TC",serif;font-weight:500;font-size:18px;margin-bottom:0;}
+  .sheet-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .star-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--cream);color:var(--hair);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;transition:all .15s ease;}
+  .star-btn.on{color:#E7B24E;background:rgba(231,178,78,.14);}
+  .choice-title{font-family:"Noto Serif TC",serif;font-size:17px;color:var(--ink);margin-bottom:16px;}
+  .choice-row{display:flex;gap:12px;}
+  .choice-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--hair);border-radius:18px;padding:22px 10px;cursor:pointer;font-family:inherit;transition:all .15s ease;}
+  .choice-card:active{transform:scale(.97);}
+  .choice-card .ic{width:40px;height:40px;}
+  .choice-card .cname{font-family:"Noto Serif TC",serif;font-size:14px;color:var(--ink);}
+  .row-fields{display:flex;gap:10px;margin-bottom:15px;}
+  .row-fields .field{flex:1;margin-bottom:0;}
   .field{margin-bottom:15px;}
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;}
   .field input{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:14px 15px;outline:none;transition:border-color .2s ease;}
@@ -356,6 +371,9 @@
   .chips button.on{color:var(--ink);border-color:var(--accent);background:var(--accent-soft);font-weight:500;}
   .chips button .em{font-size:14px;}
   .eventonly{display:none;}
+  #sheet.mode-event .taskonly{display:none;}
+  #sheet.mode-event .field.eventonly{display:block;}
+  #sheet.mode-event .row-fields.eventonly{display:flex;}
   .sheet-actions{display:flex;gap:10px;margin-top:20px;}
   .sheet-actions button{flex:1;font-family:inherit;font-size:16px;padding:14px;border-radius:12px;cursor:pointer;border:none;}
   .btn-cancel{background:var(--card);border:1px solid var(--hair)!important;color:var(--muted);}
@@ -388,6 +406,7 @@
   .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:13px;}
   .sec-head .ic{width:22px;height:22px;flex:none;}
   .sec-head .lbl{font-family:"Noto Serif TC",serif;font-size:13.5px;color:var(--ink);}
+  .petal-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
   .health-num{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--ink);margin-bottom:4px;}
   .health-sub{font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
   .nutri-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:9px;}
@@ -466,22 +485,34 @@
 
   <div class="scrim" id="scrim"></div>
   <div class="sheet" id="sheet">
-    <h3 id="sheetTitle">加一件事</h3>
-    <div class="field"><label>做什麼</label>
-      <input type="text" id="inTitle" placeholder="例如：陪孩子散步" autocomplete="off"></div>
-    <div class="field"><div class="chips" id="segKind"><button type="button" data-kind="1">📌 這是行程（沒有打勾，只是提醒）</button></div></div>
-    <div class="field taskonly"><label>分類</label><div class="chips" id="segCat"></div></div>
-    <div class="field eventonly"><label>分類（可留空）</label><div class="chips" id="segECat"></div></div>
-    <div class="field taskonly"><label>在哪些情境出現（可多選、可留空）</label><div class="chips" id="segCtx"></div></div>
-    <div class="field taskonly"><label>大概要多久</label><div class="chips" id="segCup"></div></div>
-    <div class="field taskonly"><label>需要多少精神</label><div class="chips" id="segEng"></div></div>
-    <div class="field taskonly"><label>截止日（可留空）</label><input type="date" id="inDue"></div>
-    <div class="field taskonly"><label>提前提醒（可留空＝只在截止當天出現）</label><div class="chips" id="segRemind"></div></div>
-    <div class="field eventonly"><label>開始日期</label><input type="date" id="inStartDate"></div>
-    <div class="field" id="timeField"><label id="timeLabel">時間（可留空）</label><input type="time" id="inTime"></div>
-    <div class="field eventonly"><label>結束日期（留空＝單日）</label><input type="date" id="inEndDate"></div>
-    <div class="field eventonly"><label>結束時間（留空＝沒有結束）</label><input type="time" id="inEndTime"></div>
-    <div class="field taskonly"><label>今日焦點</label><div class="chips" id="segStar"><button type="button" data-star="1">★ 放上 Bloom 首頁</button></div></div>
+    <div class="sheet-top-row">
+      <h3 id="sheetTitle">加一件事</h3>
+      <button type="button" class="star-btn taskonly" id="segStar" data-star="1">★</button>
+    </div>
+    <div id="typeChoice">
+      <div class="choice-title">這是什麼？</div>
+      <div class="choice-row">
+        <button type="button" class="choice-card" data-typechoice="task"><span id="choiceIconTask"></span><span class="cname">任務</span></button>
+        <button type="button" class="choice-card" data-typechoice="event"><span id="choiceIconEvent"></span><span class="cname">行程</span></button>
+      </div>
+    </div>
+    <div id="formFields">
+      <div class="field"><label>做什麼</label>
+        <input type="text" id="inTitle" placeholder="例如：陪孩子散步" autocomplete="off"></div>
+      <div class="field taskonly"><label>分類</label><div class="chips" id="segCat"></div></div>
+      <div class="field eventonly"><label>分類（可留空）</label><div class="chips" id="segECat"></div></div>
+      <div class="field taskonly"><label>在哪些情境出現（可多選、可留空）</label><div class="chips" id="segCtx"></div></div>
+      <div class="field taskonly"><label>大概要多久</label><div class="chips" id="segCup"></div></div>
+      <div class="field taskonly"><label>需要多少精神</label><div class="chips" id="segEng"></div></div>
+      <div class="row-fields">
+        <div class="field"><label id="dateLabel">日期（可留空）</label><input type="date" id="inStartDate"></div>
+        <div class="field"><label id="timeLabel">時間（可留空）</label><input type="time" id="inTime"></div>
+      </div>
+      <div class="row-fields eventonly">
+        <div class="field"><label>結束日期（留空＝單日）</label><input type="date" id="inEndDate"></div>
+        <div class="field"><label>結束時間（可留空）</label><input type="time" id="inEndTime"></div>
+      </div>
+    </div>
     <div class="sheet-actions">
       <button class="btn-cancel" id="btnCancel">取消</button>
       <button class="btn-save" id="btnSave">加入</button>
@@ -721,7 +752,8 @@
   function saveTodayMode(){try{localStorage.setItem(TMKEY,todayMode);}catch(e){}}
 
   // ---- deadlines + monthly recurring (pure client-side, no backend) ----
-  ICONS.due='<rect x="6" y="8" width="20" height="18" rx="2.5" fill="#F1EBE0" stroke="#A99A85" stroke-width="1.4"/><path d="M6 13h20" stroke="#A99A85" stroke-width="1.4"/><path d="M11 6v4M21 6v4" stroke="#A99A85" stroke-width="1.6"/><circle cx="16" cy="19.6" r="1.5" fill="#C99A5A"/>';
+  ICONS.type_task='<rect x="8" y="6" width="16" height="20" rx="2.5" fill="#EAF0E0" stroke="#6E8A56" stroke-width="1.5"/><rect x="12" y="4" width="8" height="4" rx="1.5" fill="#D9E4D2" stroke="#6E8A56" stroke-width="1.3"/><path d="M11.5 13.5l1.8 1.8 3-3.5M11.5 19.5l1.8 1.8 3-3.5" stroke="#6E8A56" stroke-width="1.6"/>';
+  ICONS.type_event='<rect x="5" y="9" width="16" height="15" rx="2.3" fill="#F1EBE0" stroke="#A99A85" stroke-width="1.4"/><path d="M5 13.5h16" stroke="#A99A85" stroke-width="1.3"/><path d="M9 7v3.5M17 7v3.5" stroke="#A99A85" stroke-width="1.5"/><circle cx="22" cy="21" r="6.6" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4"/><path d="M22 17.8v3.4l2.4 1.4" stroke="#fff" stroke-width="1.3"/>';
 
   // ---- 花園成長階段（Bloom 首頁，無色塊線稿）----
   ICONS.g_seed='<path d="M16 24.5c2.2 0 3.8-2.1 3.8-5.2 0-3.4-1.7-6.6-3.8-8.8-2.1 2.2-3.8 5.4-3.8 8.8 0 3.1 1.6 5.2 3.8 5.2Z" stroke="#B08A5C" stroke-width="1.4"/><path d="M10.8 26c3.4-1.1 7-1.1 10.4 0" stroke="#9A6E52" stroke-width="1.4"/>';
@@ -919,6 +951,52 @@
       main.appendChild(mp);
     }
 
+    // 今日行程
+    var tc=document.createElement("div");tc.className="card";
+    tc.innerHTML='<div class="sec-head">'+ic("g_schedule")+'<span class="lbl">今日行程</span></div>';
+    if(!todaysEvents.length){
+      tc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天沒有固定行程，自由安排。</div>');
+    }else{
+      todaysEvents.slice(0,4).forEach(function(it){
+        var trange=it.time?it.time:(it.endDate&&it.endDate!==it.date?"跨日":"全天");
+        tc.innerHTML+='<div class="tl-line"><span class="tl-dot"></span><span class="tl-time">'+esc(trange)+'</span><span class="tl-title">'+esc(it.title)+'</span></div>';
+      });
+    }
+    main.appendChild(tc);
+
+    // 今日花瓣（必須做前三件，完成的會被新的遞補上來）
+    var pc=document.createElement("div");pc.className="card";
+    var doneN=todays.filter(function(i){return i.done;}).length;
+    pc.innerHTML='<div class="sec-head">'+ic("g_petal")+'<span class="lbl">今日花瓣</span>'+(total?'<span class="petal-count">'+doneN+' / '+total+'</span>':"")+'</div>';
+    main.appendChild(pc);
+    if(!total){
+      pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天還很空白。<br>到「今日」加一件想做的事吧。</div>');
+    }else if(todays.every(function(i){return i.done;})){
+      pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天的事都完成了 🌿<br>好好休息一下。</div>');
+    }else{
+      var starred=todays.filter(function(i){return i.star;});
+      var undoneStar=starred.filter(function(i){return !i.done;});
+      var doneStar=starred.filter(function(i){return i.done;});
+      var focus=undoneStar.slice();
+      if(focus.length<3){
+        var auto=todays.filter(function(i){return !i.done&&!i.star;});
+        auto.sort(function(a,b){var da=daysUntil(a.due),db=daysUntil(b.due);var ua=(da!=null&&da<=7)?da:99,ub=(db!=null&&db<=7)?db:99;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
+        focus=focus.concat(auto.slice(0,3-focus.length));
+      }
+      if(focus.length<3)focus=focus.concat(doneStar.slice(0,3-focus.length));
+      focus=focus.slice(0,3);
+      focus.sort(function(a,b){var ad=a.done?1:0,bd=b.done?1:0;if(ad!==bd)return ad-bd;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
+      focus.forEach(function(it){
+          var burst=(bloomBurst===it.id&&it.done)?" burst":"";
+          var row=document.createElement("div");row.className="petal-line"+burst;
+          row.innerHTML='<button class="petal-check'+(it.done?" on":"")+'" data-toggle="'+it.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>'+
+            '<span class="petal-title'+(it.done?" done":"")+'"></span>';
+          row.querySelector(".petal-title").textContent=it.title;
+          pc.appendChild(row);
+      });
+    }
+    bloomBurst=null;
+
     // 花園健康度
     var streak=streakDays(),stage=growthStage(streak),health=healthWeek();
     var nextIdx=GROWTH.indexOf(stage);
@@ -935,49 +1013,6 @@
       hc.innerHTML+='<div class="nutri-row">'+ic(h.icon)+'<span class="n-name">'+h.name+'</span><div class="nutri-bar"><i style="width:'+(r*100)+'%"></i></div><span class="n-val">'+val+'</span></div>';
     });
     main.appendChild(hc);
-
-    // 今日花瓣（必須做前三件）
-    var pc=document.createElement("div");pc.className="card";
-    pc.innerHTML='<div class="sec-head">'+ic("g_petal")+'<span class="lbl">今日花瓣</span></div>';
-    main.appendChild(pc);
-    if(!total){
-      pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天還很空白。<br>到「今日」加一件想做的事吧。</div>');
-    }else{
-      var focus=todays.filter(function(i){return i.star;});
-      focus.sort(function(a,b){var ad=a.done?1:0,bd=b.done?1:0;if(ad!==bd)return ad-bd;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
-      if(focus.length<3){
-        var auto=todays.filter(function(i){return !i.done&&!i.star;});
-        auto.sort(function(a,b){var da=daysUntil(a.due),db=daysUntil(b.due);var ua=(da!=null&&da<=7)?da:99,ub=(db!=null&&db<=7)?db:99;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
-        focus=focus.concat(auto.slice(0,3-focus.length));
-      }
-      focus=focus.slice(0,3);
-      if(!focus.length){
-        pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天的事都完成了 🌿<br>好好休息一下。</div>');
-      }else{
-        focus.forEach(function(it){
-          var burst=(bloomBurst===it.id&&it.done)?" burst":"";
-          var row=document.createElement("div");row.className="petal-line"+burst;
-          row.innerHTML='<button class="petal-check'+(it.done?" on":"")+'" data-toggle="'+it.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>'+
-            '<span class="petal-title'+(it.done?" done":"")+'"></span>';
-          row.querySelector(".petal-title").textContent=it.title;
-          pc.appendChild(row);
-        });
-      }
-    }
-    bloomBurst=null;
-
-    // 今日行程
-    var tc=document.createElement("div");tc.className="card";
-    tc.innerHTML='<div class="sec-head">'+ic("g_schedule")+'<span class="lbl">今日行程</span></div>';
-    if(!todaysEvents.length){
-      tc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天沒有固定行程，自由安排。</div>');
-    }else{
-      todaysEvents.slice(0,4).forEach(function(it){
-        var trange=it.time?it.time:(it.endDate&&it.endDate!==it.date?"跨日":"全天");
-        tc.innerHTML+='<div class="tl-line"><span class="tl-dot"></span><span class="tl-time">'+esc(trange)+'</span><span class="tl-title">'+esc(it.title)+'</span></div>';
-      });
-    }
-    main.appendChild(tc);
 
     // 最近成果
     var bd=bloomDaysCount();
@@ -1315,8 +1350,12 @@
       var titles=shown.map(function(x){
         var color=x.cat&&CAT[x.cat]?CAT[x.cat].color:"#9A9186";
         if(x.kind==="event"){
-          var tpre=x.time?esc(x.time)+" ":"";
-          return '<div class="ct-chip event" style="background:'+color+';color:#fff;">'+tpre+esc(x.title)+'</div>';
+          var end=x.endDate||x.date;
+          var multi=end!==x.date;
+          var isStart=ds===x.date, isEnd=ds===end;
+          var seg=!multi?"":(isStart?"seg-start":(isEnd?"seg-end":"seg-mid"));
+          var label=(!multi||isStart)?((x.time?esc(x.time)+" ":"")+esc(x.title)):"&nbsp;";
+          return '<div class="ct-chip event '+seg+'" style="background:'+color+';color:#fff;">'+label+'</div>';
         }
         var mig=(x.migrated&&!x.done)?"➔ ":"";
         return '<div class="ct-chip'+(x.done?" done":"")+'" style="background:'+hexToRgba(color,.16)+';color:'+color+';">'+mig+esc(x.title)+'</div>';
@@ -1400,13 +1439,12 @@
 
   // sheet
   var sheet=document.getElementById("sheet"),scrim=document.getElementById("scrim");
-  var sCat=null,sCup=null,sEng=null,sCtx=[],sStar=false,sKind=false,sECat=null,sRemind=0,editId=null;
-  var REMINDS=[0,1,2,3,5,7];
-  function remindLabel(n){return n===0?"不提醒":n+"天前";}
+  var sCat=null,sCup=null,sEng=null,sCtx=[],sStar=false,sKind=false,sECat=null,editId=null;
   (function(){
+    document.getElementById("choiceIconTask").innerHTML=ic("type_task");
+    document.getElementById("choiceIconEvent").innerHTML=ic("type_event");
     var cb=document.getElementById("segCat");CATS.forEach(function(c){cb.innerHTML+='<button data-c="'+c.k+'">'+ic(c.k)+c.name+'</button>';});
     var ecb=document.getElementById("segECat");CATS.forEach(function(c){ecb.innerHTML+='<button data-ec="'+c.k+'">'+ic(c.k)+c.name+'</button>';});
-    var rb=document.getElementById("segRemind");REMINDS.forEach(function(n){rb.innerHTML+='<button data-rd="'+n+'">'+remindLabel(n)+'</button>';});
     var xb=document.getElementById("segCtx");MODES.filter(function(m){return m.k!=="all";}).forEach(function(m){xb.innerHTML+='<button data-x="'+m.k+'">'+ic(m.ico)+m.name+'</button>';});
     var pb=document.getElementById("segCup");CUPS.forEach(function(c){pb.innerHTML+='<button data-v="'+c.v+'">'+ic("cup")+c.t+'</button>';});
     var eb=document.getElementById("segEng");ENGS.forEach(function(e){eb.innerHTML+='<button data-v="'+e.v+'">'+ic("need"+e.v)+e.t+'</button>';});
@@ -1420,11 +1458,15 @@
 
   function setKindUI(isEvent){
     sKind=isEvent;
-    var kb=document.querySelector('#segKind [data-kind]');if(kb)kb.classList.toggle("on",isEvent);
-    document.querySelectorAll(".taskonly").forEach(function(el){el.style.display=isEvent?"none":"block";});
-    document.querySelectorAll(".eventonly").forEach(function(el){el.style.display=isEvent?"block":"none";});
+    sheet.classList.toggle("mode-event",isEvent);
+    document.getElementById("dateLabel").textContent=isEvent?"開始日期":"日期（可留空）";
     document.getElementById("timeLabel").textContent=isEvent?"開始時間（可留空＝全天）":"時間（可留空）";
     document.getElementById("inTitle").placeholder=isEvent?"例如：九州自駕旅行":"例如：陪孩子散步";
+  }
+  function showTypeChoice(show){
+    document.getElementById("typeChoice").style.display=show?"":"none";
+    document.getElementById("formFields").style.display=show?"none":"";
+    document.querySelector(".sheet-actions").style.display=show?"none":"";
   }
   function openSheet(item){
     closeSheets();
@@ -1435,10 +1477,8 @@
     sCtx=item&&item.ctx?item.ctx.slice():[];
     sStar=item?!!item.star:false;
     sECat=item&&item.kind==="event"?(item.cat||null):null;
-    sRemind=item?(item.remind||0):0;
-    var starBtn=document.querySelector('#segStar [data-star]');if(starBtn)starBtn.classList.toggle("on",sStar);
-    ["segCat","segCtx","segCup","segEng","segECat","segRemind"].forEach(clearSeg);
-    var brd=document.querySelector('#segRemind [data-rd="'+sRemind+'"]');if(brd)brd.classList.add("on");
+    var starBtn=document.getElementById("segStar");if(starBtn)starBtn.classList.toggle("on",sStar);
+    ["segCat","segCtx","segCup","segEng","segECat"].forEach(clearSeg);
     if(sCat){var bc=document.querySelector('#segCat [data-c="'+sCat+'"]');if(bc)bc.classList.add("on");}
     if(sCup){var bp=document.querySelector('#segCup [data-v="'+sCup+'"]');if(bp)bp.classList.add("on");}
     if(sEng){var be=document.querySelector('#segEng [data-v="'+sEng+'"]');if(be)be.classList.add("on");}
@@ -1446,15 +1486,19 @@
     sCtx.forEach(function(x){var bx=document.querySelector('#segCtx [data-x="'+x+'"]');if(bx)bx.classList.add("on");});
     document.getElementById("inTitle").value=item?item.title:"";
     document.getElementById("inTime").value=item?(item.time||""):"";
-    document.getElementById("inDue").value=item?(item.due||""):"";
-    document.getElementById("inStartDate").value=item?(item.date||""):(view==="calendar"?ymd(sel):ymd(new Date()));
+    document.getElementById("inStartDate").value=item?(item.date||""):"";
     document.getElementById("inEndDate").value=item?(item.endDate||""):"";
     document.getElementById("inEndTime").value=item?(item.endTime||""):"";
     setKindUI(item?item.kind==="event":false);
-    document.getElementById("sheetTitle").textContent=item?"編輯這件事":"加一件事";
     document.getElementById("btnSave").textContent=item?"儲存":"加入";
     scrim.classList.add("open");sheet.classList.add("open");
-    if(!item)setTimeout(function(){document.getElementById("inTitle").focus();},250);
+    if(item){
+      document.getElementById("sheetTitle").textContent=item.kind==="event"?"編輯行程":"編輯任務";
+      showTypeChoice(false);
+    }else{
+      document.getElementById("sheetTitle").textContent="加一件事";
+      showTypeChoice(true);
+    }
   }
   function closeSheet(){scrim.classList.remove("open");sheet.classList.remove("open");}
   var microsheet=document.getElementById("microsheet");
@@ -1541,11 +1585,11 @@
     }
     if(editId){
       var it=items.find(function(x){return x.id===editId;});
-      if(it){it.title=t;it.kind="task";it.cat=sCat||"";it.ctx=sCtx.slice();it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.due=document.getElementById("inDue").value;it.remind=sRemind||0;it.star=sStar;it.endDate="";it.endTime="";}
+      if(it){it.title=t;it.kind="task";it.cat=sCat||"";it.ctx=sCtx.slice();it.date=document.getElementById("inStartDate").value||it.date;it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.star=sStar;it.endDate="";it.endTime="";}
       editId=null;save();closeSheet();render();return;
     }
-    var targetDate=view==="calendar"?ymd(sel):ymd(new Date());
-    items.push({id:Date.now(),kind:"task",cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,due:document.getElementById("inDue").value,remind:sRemind||0,done:false,star:sStar});
+    var targetDate=document.getElementById("inStartDate").value||(view==="calendar"?ymd(sel):ymd(new Date()));
+    items.push({id:Date.now(),kind:"task",cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,due:"",done:false,star:sStar});
     save();closeSheet();render();
   }
 
@@ -1562,7 +1606,7 @@
     if(!swipeState)return;
     var dx=e.clientX-swipeState.startX, dy=e.clientY-swipeState.startY;
     if(!swipeState.dragging){
-      if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy))swipeState.dragging=true;
+      if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){swipeState.dragging=true;swipeState.wrap.classList.add("dragging");}
       else if(Math.abs(dy)>8){swipeState=null;return;}
     }
     if(swipeState&&swipeState.dragging){
@@ -1575,6 +1619,7 @@
   });
   function endSwipe(){
     if(!swipeState)return;
+    swipeState.wrap.classList.remove("dragging");
     if(swipeState.dragging){
       swipeState.inner.style.transition="";
       swipeState.inner.style.transform="";
@@ -1673,8 +1718,14 @@
   });
   document.getElementById("segCat").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sCat=toggleSeg("segCat",b,sCat,b.dataset.c);});
   document.getElementById("segECat").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sECat=toggleSeg("segECat",b,sECat,b.dataset.ec);});
-  document.getElementById("segRemind").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sRemind=+b.dataset.rd;clearSeg("segRemind");b.classList.add("on");});
-  document.getElementById("segKind").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;setKindUI(!sKind);});
+  document.getElementById("typeChoice").addEventListener("click",function(e){
+    var b=e.target.closest("[data-typechoice]");if(!b)return;
+    var isEvent=b.dataset.typechoice==="event";
+    setKindUI(isEvent);
+    document.getElementById("sheetTitle").textContent=isEvent?"加一個行程":"加一件任務";
+    showTypeChoice(false);
+    setTimeout(function(){document.getElementById("inTitle").focus();},250);
+  });
   document.getElementById("segCup").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sCup=toggleSeg("segCup",b,sCup,+b.dataset.v);});
   document.getElementById("segEng").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;sEng=toggleSeg("segEng",b,sEng,+b.dataset.v);});
   document.getElementById("segCtx").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var m=b.dataset.x,idx=sCtx.indexOf(m);if(idx>=0){sCtx.splice(idx,1);b.classList.remove("on");}else{sCtx.push(m);b.classList.add("on");}});
