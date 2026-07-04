@@ -1603,8 +1603,11 @@
     if(!swipeState)return;
     var dx=e.clientX-swipeState.startX, dy=e.clientY-swipeState.startY;
     if(!swipeState.dragging){
-      if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){swipeState.dragging=true;swipeState.wrap.classList.add("dragging");}
-      else if(Math.abs(dy)>8){swipeState=null;return;}
+      var adx=Math.abs(dx), ady=Math.abs(dy);
+      if(Math.max(adx,ady)>10){
+        if(adx>ady){swipeState.dragging=true;swipeState.wrap.classList.add("dragging");}
+        else{swipeState=null;return;}
+      }else{return;}
     }
     if(swipeState&&swipeState.dragging){
       var base=swipeState.wasOpen?-64:0;
