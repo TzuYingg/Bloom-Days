@@ -203,17 +203,31 @@
   .rv-hero{text-align:center;padding:14px 20px 22px;}
   .rv-num{font-family:"Noto Serif TC",serif;font-size:52px;font-weight:500;color:var(--accent);line-height:1;}
   .rv-cap{font-family:"Noto Serif TC",serif;color:var(--ink);opacity:.72;font-size:15px;margin-top:10px;line-height:1.7;}
-  .rv-cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:6px;}
-  .rv-chip{display:inline-flex;align-items:center;gap:5px;background:var(--card);border-radius:20px;padding:7px 13px;font-size:12.5px;color:var(--muted);box-shadow:var(--shadow-sm);}
-  .rv-chip .ic{width:18px;height:18px;}
-  .rv-day{font-size:12px;color:var(--muted);letter-spacing:.05em;padding:20px 4px 8px;}
-  .rv-row{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-sm);}
-  .rv-check{width:20px;height:20px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;}
-  .rv-check svg{width:11px;height:11px;}
-  .rv-body{flex:1;min-width:0;}
-  .rv-title{font-size:15px;color:var(--ink);}
-  .rv-cat{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);margin-top:5px;}
-  .rv-cat .ic{width:15px;height:15px;}
+  .rv-cats{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;margin-bottom:14px;}
+  .rv-cats .rv-chip{margin:0 7px;}
+  .rv-cats .rv-chip:first-child{margin-left:0;}
+
+  .rv-filter{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 2px 4px;margin-bottom:20px;}
+  .rv-filter::-webkit-scrollbar{display:none;}
+  .rv-fbtn{flex:none;font-size:11.5px;padding:6px 13px;border-radius:14px;background:var(--card);color:var(--muted);border:none;white-space:nowrap;cursor:pointer;}
+  .rv-fbtn.on{background:var(--accent);color:#fff;}
+
+  .rv-week{font-size:10.5px;color:#B0A595;padding:2px 2px 9px;}
+  .stamp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
+  .stamp{width:100%;aspect-ratio:1;border-radius:50%;background:var(--card);border:1.6px dashed var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .stamp .ic{width:17px;height:17px;}
+
+  .detail-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);width:260px;max-width:78%;background:var(--card);border-radius:18px;padding:24px 20px 20px;box-shadow:0 8px 24px rgba(58,54,47,.25);z-index:7;opacity:0;pointer-events:none;transition:opacity .18s ease, transform .18s ease;text-align:center;}
+  .detail-card.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
+  .dc-close{position:absolute;top:12px;right:14px;font-size:16px;color:var(--muted);cursor:pointer;line-height:1;}
+  .dc-ic{width:52px;height:52px;margin:0 auto 12px;border-radius:50%;background:var(--cream);border:1.6px dashed var(--hair);display:flex;align-items:center;justify-content:center;}
+  .dc-ic .ic{width:20px;height:20px;}
+  .dc-title{font-family:"Noto Serif TC",serif;font-size:16px;color:var(--ink);margin-bottom:6px;}
+  .dc-cat{font-size:11.5px;margin-bottom:12px;}
+  .dc-ctx{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:2px;}
+  .dc-ctx span{font-size:10.5px;background:var(--cream);color:#8A6E52;padding:3px 9px;border-radius:8px;}
+  .dc-hr{height:1px;background:var(--hair);margin:12px 0;}
+  .dc-meta{font-size:12px;color:var(--muted);line-height:1.8;}
   .timebar-wrap{background:var(--card);border-radius:18px;padding:16px 18px;margin-bottom:6px;box-shadow:var(--shadow-sm);}
   .tb-title{font-size:12.5px;color:var(--muted);margin-bottom:10px;}
   .timebar{display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--cream);}
@@ -415,11 +429,11 @@
   body.tp-evening{background:#EFE3D3;}
   body.tp-night{background:#E7E3DD;}
 
-  .card{background:none;border-top:1px solid var(--hair);padding-top:18px;margin-top:22px;box-shadow:none;border-radius:0;}
+  .card{background:var(--card);border-radius:20px;padding:20px;margin-top:14px;box-shadow:var(--shadow);}
   .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:13px;}
   .sec-head .ic{width:22px;height:22px;flex:none;}
-  .sec-head .lbl{font-family:"Noto Serif TC",serif;font-size:13.5px;color:var(--ink);}
-  .mini-label{font-size:11px;color:var(--muted);letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .sec-head .lbl{font-family:"Noto Serif TC",serif;font-size:16px;font-weight:500;color:var(--ink);}
+  .mini-label{font-family:"Noto Serif TC",serif;font-size:16px;font-weight:500;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
   .mini-label .ic{width:16px;height:16px;}
   .more-hint{font-size:12.5px;color:var(--muted);cursor:pointer;padding:4px 2px 2px;}
   .health-num{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--ink);margin-bottom:4px;}
@@ -456,6 +470,8 @@
   .done-row{font-size:13.5px;color:var(--muted);}
 
   .tl-line{display:flex;align-items:center;gap:11px;padding:7px 0;}
+  .quote-card{background:var(--card);border-radius:16px;padding:18px 20px;margin-top:14px;text-align:center;}
+  .quote-card .qt{font-family:"Noto Serif TC",serif;font-size:14.5px;color:#6B6559;line-height:1.8;}
   .tl-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;}
   .tl-time{font-size:11.5px;color:var(--muted);width:44px;flex:none;font-variant-numeric:tabular-nums;}
   .tl-title{font-size:13.5px;color:var(--ink);}
@@ -596,6 +612,16 @@
       <button class="btn-save" id="schedSave">飛到那天</button>
     </div>
   </div>
+
+  <div class="detail-card" id="stampCard">
+    <div class="dc-close" id="dcClose">×</div>
+    <div class="dc-ic" id="dcIcon"></div>
+    <div class="dc-title" id="dcTitle"></div>
+    <div class="dc-cat" id="dcCat"></div>
+    <div class="dc-ctx" id="dcCtx"></div>
+    <div class="dc-hr"></div>
+    <div class="dc-meta" id="dcMeta"></div>
+  </div>
 </div>
 
 <script>
@@ -720,7 +746,7 @@
   ICONS.nav_recur_b='<path d="M12.5 6.5h7l-1 6 3.2 3.2v1.8h-11.4v-1.8l3.2-3.2z" fill="#C98A5A" stroke="#9E6E3E" stroke-width="1.4" stroke-linejoin="round"/><path d="M16 17.5V25.5" stroke="#9E6E3E" stroke-width="1.7"/><ellipse cx="16" cy="9.4" rx="2.1" ry="1" fill="#E7C3A0" opacity=".7"/>';
   ICONS.nav_recur_c='<circle cx="16" cy="17.5" r="7.3" fill="#EDE7DD" stroke="#9E8E79" stroke-width="1.5"/><path d="M16 13.6v4.2l2.8 1.7" stroke="#7A6A52" stroke-width="1.6"/><path d="M10.6 8.2a7 7 0 0 1 8.8-.2" stroke="#7E9AB6" stroke-width="1.6" fill="none"/><path d="M19.8 5.6l.5 2.6-2.6.3z" fill="#7E9AB6"/>';
   // Bloom 靜心首頁（花瓣漸開）
-  ICONS.nav_bloom_a='<path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4" transform="rotate(-34 16 27.5)"/><path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#8AA6CA" stroke="#4E6E96" stroke-width="1.4" transform="rotate(34 16 27.5)"/><path d="M16 27.5C11 20.5 11 12.5 16 6.8 21 12.5 21 20.5 16 27.5Z" fill="#BFD3E8" stroke="#6E8AA8" stroke-width="1.3"/><circle cx="16" cy="16.5" r="2.3" fill="#F4CE6E" stroke="#D99A2E" stroke-width="1"/>';
+  ICONS.nav_bloom_a='<g fill="#E7A6B4" stroke="#C06E7C" stroke-width="1.1"><ellipse cx="16" cy="9.5" rx="3.6" ry="5.2"/><ellipse cx="16" cy="9.5" rx="3.6" ry="5.2" transform="rotate(72 16 16)"/><ellipse cx="16" cy="9.5" rx="3.6" ry="5.2" transform="rotate(144 16 16)"/><ellipse cx="16" cy="9.5" rx="3.6" ry="5.2" transform="rotate(216 16 16)"/><ellipse cx="16" cy="9.5" rx="3.6" ry="5.2" transform="rotate(288 16 16)"/></g><circle cx="16" cy="16" r="3" fill="#F4CE6E" stroke="#D99A2E" stroke-width="1"/>';
   // 養分
   ICONS.nav_nutrient_a='<path d="M16 27V14.5" stroke="#6E8A56" stroke-width="1.8"/><path d="M16 16.5c-4.6 0-7.2-2.6-7.2-7.2 4.6 0 7.2 2.6 7.2 7.2Z" fill="#A9C48C" stroke="#6E8A56" stroke-width="1.4"/><path d="M16 14.5c4.1 0 6.6-2.3 6.6-6.6-4.1 0-6.6 2.3-6.6 6.6Z" fill="#BBD39F" stroke="#6E8A56" stroke-width="1.4"/><path d="M12.5 27h7" stroke="#9E7A4E" stroke-width="1.7"/>';
   ICONS.nav_nutrient_b='<path d="M16 6c4.2 5.2 6.3 8.4 6.3 11.5a6.3 6.3 0 0 1-12.6 0C9.7 14.4 11.8 11.2 16 6Z" fill="#AFD2E6" stroke="#5E9AB8" stroke-width="1.5"/><path d="M12.8 18a3.2 3.2 0 0 0 3.2 3.2" stroke="#EAF1F5" stroke-width="1.4"/>';
@@ -747,7 +773,7 @@
   function loadMode(dateStr){try{return localStorage.getItem(MKEY+dateStr)||"focus";}catch(e){return "focus";}}
   function saveMode(dateStr,m){try{localStorage.setItem(MKEY+dateStr,m);}catch(e){}}
 
-  var view="bloom", sel=new Date(), calMonth=new Date(), showOther=false;
+  var view="bloom", sel=new Date(), calMonth=new Date(), showOther=false, rvFilter=null;
   var calSub="month", weekAnchor=new Date(), yearAnchor=new Date().getFullYear(), goalOpen=false, lifeFilter="all";
   var MUSTCAP=5;
   var WORKCATS=["advance","maintain"], LIFECATS=["connect","recharge"];
@@ -832,7 +858,7 @@
   function loadFeat(){try{return JSON.parse(localStorage.getItem(FKEY)||"[]");}catch(e){return[];}}
   function saveFeat(){try{localStorage.setItem(FKEY,JSON.stringify(feat));}catch(e){}}
   var feat=loadFeat();
-  function toggleFeat(k){var i=feat.indexOf(k);if(i>=0){feat.splice(i,1);}else{if(feat.length>=3)feat.shift();feat.push(k);}saveFeat();render();}
+  function toggleFeat(k){var i=feat.indexOf(k);if(i>=0){feat.splice(i,1);}else{if(feat.length>=4)feat.shift();feat.push(k);}saveFeat();render();}
   function relTime(ms){var d=Date.now()-ms,m=Math.floor(d/60000);if(m<1)return"剛剛";if(m<60)return m+" 分鐘前";var h=Math.floor(m/60);if(h<24)return h+" 小時前";return Math.floor(h/24)+" 天前";}
   var HKEY="lifeos_habits";
   function loadH(){try{return JSON.parse(localStorage.getItem(HKEY)||"{}");}catch(e){return{};}}
@@ -874,7 +900,7 @@
 
   function fmtDateHeader(){var n=new Date();document.getElementById("date").textContent=(n.getMonth()+1)+"月"+n.getDate()+"日";document.getElementById("dow").textContent=DOW[n.getDay()];var gw=document.getElementById("greetWord");if(gw)gw.textContent=greetWord();}
 
-  var WARMLINES=[
+  var QUOTES=[
     "今天不必完美，完成一點點，就值得。",
     "慢慢來，往往比較快。",
     "先把自己顧好，其他的再說。",
@@ -883,18 +909,7 @@
     "留白，也是一種完成。",
     "放慢腳步，好好感受一件小事。"
   ];
-  function dailyMessage(){
-    var yd=ymd(new Date(Date.now()-86400000)),y=hlog[yd]||{};
-    var doneY=items.filter(function(i){return i.done&&(i.doneDate||i.date)===yd;}).length;
-    var goodH=(y.read?1:0)+(y.kiwi?1:0)+((y.water||0)>=1000?1:0);
-    if(y.sleep===3)return "昨晚睡得晚，今天步調放慢一點也沒關係。先挑一件輕鬆的，慢慢開始。";
-    if(y.sleep===1&&doneY>=1)return "昨晚好好充了電，昨天也留下了 "+doneY+" 個痕跡。今天很適合往前推一件重要的事。";
-    if(y.sleep===1)return "昨晚好好充了電。今天很適合，把一件重要的事往前推一步。";
-    if(doneY>=6)return "昨天完成了 "+doneY+" 件，辛苦了。今天不用趕，順順地過就好。";
-    if(goodH>=2)return "昨天把自己照顧得很好。保持這個節奏，今天也會很穩。";
-    if(doneY>=1)return "昨天留下了 "+doneY+" 個痕跡。今天也，一件一件來就好。";
-    return WARMLINES[new Date().getDate()%WARMLINES.length];
-  }
+  function quoteOfDay(){return QUOTES[new Date().getDate()%QUOTES.length];}
 
   function inRange(i,ds){
     if(i.kind==="event"){var end=i.endDate||i.date;return i.date<=ds&&ds<=end;}
@@ -996,6 +1011,12 @@
     var doneN=todays.filter(function(i){return i.done;}).length;
     var ds=loadDayScore(t);
 
+    // 今日語錄（放在最上方）
+    var qc=document.createElement("div");qc.className="quote-card";
+    qc.innerHTML='<div class="qt"></div>';
+    qc.querySelector(".qt").textContent="「"+quoteOfDay()+"」";
+    main.appendChild(qc);
+
     // 今日狀態主視覺卡：花瓣數／進度條／睡眠・工作・心情打分
     var hero=document.createElement("div");hero.className="hero-card";
     var segs=6,filled=total?Math.round((doneN/total)*segs):0;
@@ -1078,7 +1099,7 @@
     hc.innerHTML='<div class="sec-head">'+ic(stage[1])+'<span class="lbl">花園健康度・'+stage[2]+'</span></div>'+
       '<div class="health-num">連續照顧 '+streak+' 天</div>'+
       '<div class="health-sub">'+(health!==null?('過去七天平均完成 '+health+'%　'):'')+nextInfo+'</div>';
-    var keys=feat.length?feat.slice(0,3):HABITS.slice(0,3).map(function(h){return h.k;});
+    var keys=feat.length?feat.slice(0,4):HABITS.slice(0,4).map(function(h){return h.k;});
     var th=todayH();
     var grid=document.createElement("div");grid.className="nutri-grid";
     keys.forEach(function(k){var h=HAB[k];if(!h)return;
@@ -1111,6 +1132,8 @@
     });
     main.appendChild(wall);
   }
+  function hexA(hex,a){var h=hex.replace("#","");var r=parseInt(h.substring(0,2),16),g=parseInt(h.substring(2,4),16),b=parseInt(h.substring(4,6),16);return "rgba("+r+","+g+","+b+","+a+")";}
+  function stampRot(id){return (id%13)-6;}
   function relDay(ds){
     var t=ymd(new Date()),y=ymd(new Date(Date.now()-86400000));
     if(ds===t)return"今天";if(ds===y)return"昨天";
@@ -1119,26 +1142,58 @@
   function renderReview(){
     var done=items.concat(archive).filter(function(i){return i.done;});
     var mk=ymd(new Date()).slice(0,7);
-    var monthN=done.filter(function(i){return (i.doneDate||i.date||"").indexOf(mk)===0;}).length;
+    var monthDone=done.filter(function(i){return (i.doneDate||i.date||"").indexOf(mk)===0;});
+    var monthN=monthDone.length;
     main.insertAdjacentHTML("beforeend",'<div class="rv-hero"><div class="rv-num">'+monthN+'</div><div class="rv-cap">這個月，你完成了 '+monthN+' 件事。<br>回頭看看你做到的 🌿</div></div>');
-    if(!done.length){main.insertAdjacentHTML("beforeend",'<div class="empty"><span class="big">還沒有完成的紀錄</span>做完一件事，這裡就會留下痕跡</div>');return;}
-    // category breakdown (this month)
-    var counts={};done.forEach(function(i){if((i.doneDate||i.date||"").indexOf(mk)===0&&i.cat)counts[i.cat]=(counts[i.cat]||0)+1;});
-    var chips="";CATS.forEach(function(c){if(counts[c.k])chips+='<span class="rv-chip">'+ic(c.k)+'<span style="color:'+c.color+'">'+c.name+'</span> '+counts[c.k]+'</span>';});
-    if(chips)main.insertAdjacentHTML("beforeend",'<div class="rv-cats">'+chips+'</div>');
-    // group by completion day, newest first
-    var groups={};done.forEach(function(i){var d=i.doneDate||i.date||"";(groups[d]=groups[d]||[]).push(i);});
-    var days=Object.keys(groups).sort().reverse();
-    days.forEach(function(d){
-      main.insertAdjacentHTML("beforeend",'<div class="rv-day">'+relDay(d)+' · '+groups[d].length+' 件</div>');
-      var wrap=document.createElement("div");wrap.className="agenda";
-      groups[d].forEach(function(it){
-        var c=CAT[it.cat],color=c?c.color:"var(--muted)";
-        wrap.insertAdjacentHTML("beforeend",'<div class="rv-row"><span class="rv-check" style="background:'+color+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><div class="rv-body"><div class="rv-title"></div>'+(c?'<div class="rv-cat">'+ic(it.cat)+'<span style="color:'+color+'">'+c.name+'</span></div>':'')+'</div></div>');
-        wrap.lastChild.querySelector(".rv-title").textContent=it.title;
+    if(!monthN){main.insertAdjacentHTML("beforeend",'<div class="empty"><span class="big">還沒有完成的紀錄</span>做完一件事，這裡就會留下痕跡</div>');return;}
+
+    // 分類統計（單行文字）
+    var counts={};monthDone.forEach(function(i){if(i.cat)counts[i.cat]=(counts[i.cat]||0)+1;});
+    var chipArr=[];CATS.forEach(function(c){if(counts[c.k])chipArr.push('<span class="rv-chip" style="color:'+c.color+'">'+c.name+' '+counts[c.k]+'</span>');});
+    if(chipArr.length)main.insertAdjacentHTML("beforeend",'<div class="rv-cats">'+chipArr.join('<span style="color:var(--hair)">·</span>')+'</div>');
+
+    // 分類篩選（可點擊）
+    if(!CATS.some(function(c){return counts[c.k]&&rvFilter===c.k;}))rvFilter=null;
+    var fRow=document.createElement("div");fRow.className="rv-filter";
+    fRow.innerHTML='<button class="rv-fbtn'+(!rvFilter?" on":"")+'" data-rvf="">全部</button>';
+    CATS.forEach(function(c){if(counts[c.k])fRow.innerHTML+='<button class="rv-fbtn'+(rvFilter===c.k?" on":"")+'" data-rvf="'+c.k+'">'+c.name+'</button>';});
+    main.appendChild(fRow);
+
+    var shown=rvFilter?monthDone.filter(function(i){return i.cat===rvFilter;}):monthDone;
+    shown.sort(function(a,b){return (b.doneDate||b.date||"").localeCompare(a.doneDate||a.date||"");});
+
+    // 依週分組，最新的週在最上面
+    var weekOf=function(dstr){var d=new Date(dstr+"T00:00:00");return Math.floor((d.getDate()-1)/7);};
+    var weeks={};shown.forEach(function(i){var d=i.doneDate||i.date||mk+"-01";var w=weekOf(d);(weeks[w]=weeks[w]||[]).push(i);});
+    var wkeys=Object.keys(weeks).map(Number).sort(function(a,b){return b-a;});
+    var monthNum=+mk.slice(5,7);
+    var daysInMonth=new Date(+mk.slice(0,4),monthNum,0).getDate();
+    wkeys.forEach(function(w){
+      var startD=w*7+1, endD=Math.min(startD+6,daysInMonth);
+      main.insertAdjacentHTML("beforeend",'<div class="rv-week">'+monthNum+'/'+startD+' – '+monthNum+'/'+endD+'</div>');
+      var grid=document.createElement("div");grid.className="stamp-grid";
+      weeks[w].forEach(function(it){
+        var c=CAT[it.cat],color=c?c.color:"#9A9186";
+        var s=document.createElement("div");s.className="stamp";s.setAttribute("data-stamp",it.id);
+        s.style.borderColor=hexA(color,.55);s.style.transform="rotate("+stampRot(it.id)+"deg)";
+        s.innerHTML=c?ic(it.cat):ic("g_petal");
+        grid.appendChild(s);
       });
-      main.appendChild(wrap);
+      main.appendChild(grid);
     });
+  }
+  function openStampDetail(it){
+    closeSheets();
+    var c=CAT[it.cat];
+    document.getElementById("dcIcon").innerHTML=c?ic(it.cat):ic("g_petal");
+    document.getElementById("dcTitle").textContent=it.title;
+    document.getElementById("dcCat").innerHTML=c?('<span style="color:'+c.color+'">'+c.name+'</span>'):"";
+    var ctxHtml="";(it.ctx||[]).forEach(function(k){var m=MODES.find(function(x){return x.k===k;});if(m)ctxHtml+='<span>'+m.name+'</span>';});
+    document.getElementById("dcCtx").innerHTML=ctxHtml;
+    var d=it.doneDate||it.date||"";
+    var dur=CUPT[it.cup]?('・大概 '+CUPT[it.cup]):"";
+    document.getElementById("dcMeta").textContent=(d?relDay(d)+' 完成':"")+dur;
+    scrim.classList.add("open");stampCard.classList.add("open");
   }
   function jarStar(x,y){return '<path d="M'+x+' '+(y-3.2)+'l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="#E7C065"/>';}
   function jarDumbbell(x,y){return '<g transform="translate('+x+','+y+')"><rect x="-3.6" y="-1.1" width="7.2" height="2.2" rx="1.1" fill="#E7C3A8" stroke="#B0794E" stroke-width=".6"/><rect x="-5.6" y="-2.5" width="2.6" height="5" rx="1.2" fill="#8AA6CA" stroke="#4E6E96" stroke-width=".7"/><rect x="3" y="-2.5" width="2.6" height="5" rx="1.2" fill="#8AA6CA" stroke="#4E6E96" stroke-width=".7"/></g>';}
@@ -1194,7 +1249,7 @@
     main.appendChild(quad);
     var fp=document.createElement("div");fp.className="feat-pick";
     var fchips="";HABITS.forEach(function(h){fchips+='<button class="'+(feat.indexOf(h.k)>=0?"on":"")+'" data-featstar="'+h.k+'">'+ic(h.icon)+h.name+'</button>';});
-    fp.innerHTML='<div class="feat-pick-label">在 Bloom 首頁想看到哪些養分？（最多 3 個）</div><div class="chips">'+fchips+'</div>';
+    fp.innerHTML='<div class="feat-pick-label">在 Bloom 首頁想看到哪些養分？（最多 4 個）</div><div class="chips">'+fchips+'</div>';
     main.appendChild(fp);
 
     var sv=th.sleep||0,moons="";
@@ -1512,7 +1567,7 @@
   }
 
   // sheet
-  var sheet=document.getElementById("sheet"),scrim=document.getElementById("scrim");
+  var sheet=document.getElementById("sheet"),scrim=document.getElementById("scrim"),stampCard=document.getElementById("stampCard");
   var sCat=null,sCup=null,sEng=null,sCtx=[],sStar=false,sKind=false,sECat=null,editId=null;
   (function(){
     document.getElementById("choiceIconTask").innerHTML=ic("type_task");
@@ -1578,7 +1633,7 @@
   function closeSheet(){scrim.classList.remove("open");sheet.classList.remove("open");}
   var microsheet=document.getElementById("microsheet");
   var lsheet=document.getElementById("lsheet");
-  function closeSheets(){scrim.classList.remove("open");sheet.classList.remove("open");microsheet.classList.remove("open");if(rsheet)rsheet.classList.remove("open");if(lsheet)lsheet.classList.remove("open");var cs=document.getElementById("capsheet");if(cs)cs.classList.remove("open");var ss=document.getElementById("schedsheet");if(ss)ss.classList.remove("open");}
+  function closeSheets(){scrim.classList.remove("open");sheet.classList.remove("open");microsheet.classList.remove("open");if(rsheet)rsheet.classList.remove("open");if(lsheet)lsheet.classList.remove("open");var cs=document.getElementById("capsheet");if(cs)cs.classList.remove("open");var ss=document.getElementById("schedsheet");if(ss)ss.classList.remove("open");stampCard.classList.remove("open");}
   function openMicro(){
     closeSheets();
     document.getElementById("microTitle").textContent="喘口氣，回一下血";
@@ -1678,6 +1733,10 @@
     if(sct){var sp=sct.dataset.scoretap.split("|"),skey=sp[0],sval=+sp[1];var std=ymd(new Date());var dsv=loadDayScore(std);dsv[skey]=(dsv[skey]===sval?sval-1:sval);saveDayScore(std,dsv);render();return;}
     var gt=e.target.closest("[data-goto]");
     if(gt){view=gt.dataset.goto;showOther=false;render();return;}
+    var rvf=e.target.closest("[data-rvf]");
+    if(rvf){rvFilter=rvf.dataset.rvf||null;render();return;}
+    var stp=e.target.closest("[data-stamp]");
+    if(stp){var sit=items.concat(archive).find(function(x){return x.id===+stp.dataset.stamp;});if(sit)openStampDetail(sit);return;}
     var fst=e.target.closest("[data-featstar]");
     if(fst){toggleFeat(fst.dataset.featstar);return;}
     var md=e.target.closest("[data-mode]");
@@ -1797,6 +1856,7 @@
     save();closeSheet();render();
   });
   document.getElementById("scrim").addEventListener("click",closeSheets);
+  document.getElementById("dcClose").addEventListener("click",closeSheets);
   document.getElementById("btnSave").addEventListener("click",saveItem);
   document.getElementById("inTitle").addEventListener("keydown",function(e){if(e.key==="Enter")saveItem();});
 
