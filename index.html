@@ -24,14 +24,12 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{font-family:"Noto Sans TC",system-ui,sans-serif;background:var(--cream);color:var(--ink);font-weight:400;line-height:1.5;overflow:hidden;transition:background .4s ease;}
-  #app{max-width:460px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;position:relative;}
+  #app{max-width:460px;margin:0 auto;height:100svh;display:flex;flex-direction:column;position:relative;}
 
   header{padding:26px 24px 10px;}
-  .greet{font-size:13px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px;}
-  .date-line{font-family:"Noto Serif TC",serif;font-size:29px;font-weight:500;line-height:1.15;display:flex;align-items:baseline;gap:10px;}
-  .date-line .dow{font-size:15px;color:var(--muted);font-family:"Noto Sans TC",sans-serif;font-weight:400;}
-  .daily-msg{font-family:"Noto Serif TC",serif;font-size:14.5px;color:var(--muted);line-height:1.85;margin-top:11px;max-width:97%;letter-spacing:.01em;}
-  .daily-msg::before{content:"";display:block;width:22px;height:1px;background:var(--hair);margin:0 0 11px;}
+  .greet-line{font-size:13px;color:var(--muted);letter-spacing:.06em;}
+  .greet-line .dow{color:var(--muted);}
+  .daily-msg{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:500;color:var(--ink);line-height:1.5;margin-top:10px;max-width:97%;}
 
   /* bottom tab bar */
   .tabbar{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;
@@ -109,11 +107,7 @@
   .micro-done{font-family:"Noto Serif TC",serif;font-size:20px;color:var(--ink);text-align:center;padding:26px 10px 30px;line-height:1.5;}
 
   .agenda{display:flex;flex-direction:column;gap:12px;}
-  .row-wrap{position:relative;overflow:hidden;border-radius:var(--radius);}
-  .row-swipebg{position:absolute;top:0;right:0;bottom:0;width:64px;background:#C87B86;display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;pointer-events:none;transition:opacity .15s ease;}
-  .row-wrap.swiped .row-swipebg,.row-wrap.dragging .row-swipebg{opacity:1;pointer-events:auto;}
-  .row-swipebg svg{width:20px;height:20px;}
-  .row{display:flex;align-items:flex-start;gap:14px;background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);animation:rise .35s ease both;position:relative;z-index:1;touch-action:pan-y;transition:transform .22s cubic-bezier(.22,.61,.36,1);}
+  .row{display:flex;align-items:flex-start;gap:14px;background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);animation:rise .35s ease both;}
   @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
   .dot{width:20px;height:20px;border-radius:50%;flex:none;margin-top:2px;border:2px solid var(--accent);cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center;}
   .dot svg{width:11px;height:11px;opacity:0;transition:opacity .2s ease;}
@@ -348,7 +342,7 @@
 
   .scrim{position:absolute;inset:0;background:rgba(58,48,38,.32);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:5;}
   .scrim.open{opacity:1;pointer-events:auto;}
-  .sheet{position:absolute;left:0;right:0;bottom:0;z-index:6;background:var(--cream);border-radius:26px 26px 0 0;padding:24px 22px calc(20px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .3s cubic-bezier(.22,.61,.36,1);box-shadow:0 -10px 34px rgba(78,64,48,.14);max-height:90dvh;overflow-y:auto;}
+  .sheet{position:absolute;left:0;right:0;bottom:0;z-index:6;background:var(--cream);border-radius:26px 26px 0 0;padding:24px 22px calc(20px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .3s cubic-bezier(.22,.61,.36,1);box-shadow:0 -10px 34px rgba(78,64,48,.14);max-height:90svh;overflow-y:auto;}
   .sheet.open{transform:translateY(0);}
   .sheet h3{font-family:"Noto Serif TC",serif;font-weight:500;font-size:18px;margin-bottom:0;}
   .sheet-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
@@ -390,8 +384,7 @@
   .ord-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
   .ord-head .mode-hint{margin:0;flex:1;}
   .now-tag{display:inline-block;font-size:11px;color:var(--accent);font-weight:500;background:var(--accent-soft);border-radius:10px;padding:2px 8px;margin-bottom:5px;}
-  .row-wrap.now-card .row{box-shadow:0 3px 12px rgba(78,64,48,.14);}
-  .row-wrap.swiped .row{transform:translateX(-64px);}
+  .row.now-card{box-shadow:0 3px 12px rgba(78,64,48,.14);}
 
   /* ===== Bloom 今日花園首頁 ===== */
   .bloom-head{padding:8px 2px 4px;position:relative;}
@@ -401,31 +394,66 @@
   .mood-picker button{flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;font-family:inherit;font-size:10.5px;color:var(--muted);cursor:pointer;padding:6px 2px;border-radius:10px;}
   .mood-picker button:active{background:var(--accent-soft);}
   .mood-picker .ic{width:24px;height:24px;}
-  .greetline{font-family:"Noto Serif TC",serif;font-size:22px;color:var(--ink);margin-bottom:6px;padding-right:70px;}
-  .bloom-intent{font-size:12.5px;color:var(--muted);line-height:1.7;padding-right:64px;}
+  /* 今日狀態主視覺卡 */
+  .hero-card{background:var(--card);border-radius:20px;padding:22px;margin-top:14px;box-shadow:var(--shadow-sm);}
+  .hero-num-row{display:flex;align-items:baseline;gap:6px;margin-bottom:12px;}
+  .hero-num{font-family:"Noto Serif TC",serif;font-size:32px;font-weight:500;color:var(--accent);}
+  .hero-unit{font-size:13px;color:var(--muted);}
+  .hero-bar{display:flex;gap:5px;margin-bottom:18px;}
+  .hero-bar i{height:3px;flex:1;border-radius:2px;background:var(--accent-soft);}
+  .hero-bar i.on{background:var(--accent);}
+  .star-rows{display:flex;flex-direction:column;gap:10px;}
+  .star-rate{display:flex;align-items:center;justify-content:space-between;}
+  .sr-label{font-size:12px;color:var(--muted);}
+  .sr-stars{display:flex;gap:2px;}
+  .sr-star{background:none;border:none;padding:2px;font-size:14px;color:var(--hair);cursor:pointer;line-height:1;}
+  .sr-star.on{color:var(--accent);}
+
+  /* 依時段的背景微調（幅度克制） */
+  body.tp-morning{background:#F2ECDE;}
+  body.tp-afternoon{background:#EEE8DC;}
+  body.tp-evening{background:#EFE3D3;}
+  body.tp-night{background:#E7E3DD;}
 
   .card{background:none;border-top:1px solid var(--hair);padding-top:18px;margin-top:22px;box-shadow:none;border-radius:0;}
   .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:13px;}
   .sec-head .ic{width:22px;height:22px;flex:none;}
   .sec-head .lbl{font-family:"Noto Serif TC",serif;font-size:13.5px;color:var(--ink);}
-  .petal-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .mini-label{font-size:11px;color:var(--muted);letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .mini-label .ic{width:16px;height:16px;}
+  .more-hint{font-size:12.5px;color:var(--muted);cursor:pointer;padding:4px 2px 2px;}
   .health-num{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--ink);margin-bottom:4px;}
   .health-sub{font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
-  .nutri-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:9px;}
-  .nutri-row .ic{width:18px;height:18px;flex:none;}
-  .nutri-row .n-name{width:36px;color:var(--ink);flex:none;}
-  .nutri-bar{flex:1;height:4px;border-radius:3px;background:var(--hair);overflow:hidden;}
-  .nutri-bar i{display:block;height:100%;background:#7C9A5C;border-radius:3px;}
-  .n-val{font-size:11px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums;}
+  .nutri-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+  .nutri-tile{background:var(--card);border-radius:14px;padding:13px 14px;}
+  .nutri-tile-head{display:flex;align-items:center;gap:6px;margin-bottom:9px;}
+  .nutri-tile-head .ic{width:16px;height:16px;flex:none;}
+  .nutri-tile-head span{font-size:12px;color:var(--muted);}
+  .nutri-tile-val{font-size:12.5px;color:var(--ink);margin-bottom:7px;}
+  .nutri-tile-bar{height:4px;border-radius:3px;background:var(--hair);overflow:hidden;}
+  .nutri-tile-bar i{display:block;height:100%;background:#7C9A5C;border-radius:3px;}
 
-  .petal-line{display:flex;align-items:center;gap:11px;padding:7px 0;}
-  .petal-check{width:22px;height:22px;border-radius:50%;border:1.6px solid var(--accent);background:none;flex:none;display:flex;align-items:center;justify-content:center;color:transparent;cursor:pointer;padding:0;}
-  .petal-check.on{background:var(--accent);color:#fff;}
-  .petal-check svg{width:12px;height:12px;}
-  .petal-title{font-size:13.5px;color:var(--ink);}
-  .petal-title.done{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--hair);}
-  .petal-line.burst .petal-check{animation:dotBurst .6s ease;}
-  @keyframes dotBurst{0%{transform:scale(1);}42%{transform:scale(1.34);}100%{transform:scale(1);}}
+  .section-block{margin-top:26px;}
+  .focus-card{display:flex;align-items:center;gap:6px;background:var(--card);border-radius:14px;padding:14px 8px 14px 16px;margin-bottom:10px;}
+  .fc-body{flex:1;cursor:pointer;}
+  .focus-card.tier-rest{background:rgba(78,154,147,.10);}
+  .focus-card.done{opacity:.5;}
+  .focus-card.burst{animation:cardBurst .5s ease;}
+  @keyframes cardBurst{0%{transform:scale(1);}40%{transform:scale(1.03);}100%{transform:scale(1);}}
+  .fc-tag{font-size:12.5px;font-weight:500;margin-right:10px;}
+  .fc-title{font-size:14.5px;color:var(--ink);}
+  .fc-title.done{text-decoration:line-through;text-decoration-color:var(--hair);color:var(--muted);}
+  .fc-edit{background:none;border:none;color:var(--muted);font-size:17px;letter-spacing:1px;padding:6px 7px;cursor:pointer;flex:none;}
+  .fc-del{background:none;border:none;color:var(--hair);font-size:18px;padding:2px 6px;line-height:1;cursor:pointer;flex:none;transition:color .2s ease;}
+
+  .garden-peek{text-align:center;padding:26px 0;}
+  .garden-ic{width:72px;height:72px;margin:0 auto;opacity:.9;}
+  .garden-ic .ic{width:100%;height:100%;}
+  .garden-cap{font-size:11.5px;color:var(--muted);margin-top:8px;}
+
+  .done-card{background:rgba(154,145,134,.08);border-radius:16px;padding:16px 18px;margin-top:22px;}
+  .done-list{display:flex;flex-direction:column;gap:8px;}
+  .done-row{font-size:13.5px;color:var(--muted);}
 
   .tl-line{display:flex;align-items:center;gap:11px;padding:7px 0;}
   .tl-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;}
@@ -458,6 +486,7 @@
     #app{max-width:1040px;}
     header{padding:26px 40px 10px;}
     main{padding:16px 40px calc(150px + env(safe-area-inset-bottom));}
+    .hero-card,.section-block,.card,.done-card,.garden-peek,.walkin{max-width:460px;margin-left:auto;margin-right:auto;}
     .calsub,.theme-band,.cal-head,.weekdays,.cal-sub,.lifefilter,.wk-card,.week-note,.yearpage{max-width:760px;margin-left:auto;margin-right:auto;}
     .grid{max-width:760px;margin:0 auto;gap:6px;}
     .cell{min-height:118px;padding:8px 8px 7px;border-radius:12px;}
@@ -474,7 +503,7 @@
 <div id="app">
   <div id="syncDot" style="display:none"></div>
   <header>
-    <div class="date-line"><span id="date">7月2日</span><span class="dow" id="dow">週四</span></div>
+    <div class="greet-line"><span id="greetWord"></span>・<span class="dow" id="dow"></span>・<span id="date"></span></div>
     <div class="daily-msg" id="dailyMsg"></div>
   </header>
 
@@ -843,7 +872,7 @@
 
   function setAccent(){var m=MODE[mode];app.style.setProperty("--accent",m.accent);app.style.setProperty("--accent-soft",m.soft);app.querySelector||0;document.querySelector('meta[name=theme-color]').setAttribute("content","#F2F0EC");}
 
-  function fmtDateHeader(){var n=new Date();document.getElementById("date").textContent=(n.getMonth()+1)+"月"+n.getDate()+"日";document.getElementById("dow").textContent=DOW[n.getDay()];}
+  function fmtDateHeader(){var n=new Date();document.getElementById("date").textContent=(n.getMonth()+1)+"月"+n.getDate()+"日";document.getElementById("dow").textContent=DOW[n.getDay()];var gw=document.getElementById("greetWord");if(gw)gw.textContent=greetWord();}
 
   var WARMLINES=[
     "今天不必完美，完成一點點，就值得。",
@@ -881,9 +910,17 @@
       });
   }
 
+  function todayStats(){
+    var t=ymd(new Date());
+    var todays=items.filter(function(i){return i.date===t&&i.kind!=="event";});
+    var ev=itemsFor(t).filter(function(i){return i.kind==="event";});
+    return {total:todays.length,doneN:todays.filter(function(i){return i.done;}).length,eventN:ev.length};
+  }
   function render(){
     setAccent();
-    var dm=document.getElementById("dailyMsg");if(dm)dm.textContent=dailyMessage();
+    applyTimeTint();
+    fmtDateHeader();
+    var dm=document.getElementById("dailyMsg");if(dm){var ts=todayStats();dm.textContent=todayLoadLine(ts.total,ts.doneN,ts.eventN);}
     document.querySelectorAll(".view-btn").forEach(function(b){b.classList.toggle("on",b.dataset.view===view);});
     document.getElementById("fab").style.display=(view==="today"||view==="calendar")?"":"none";
     document.getElementById("jot").style.display=(view==="today"||view==="calendar"||view==="inbox")?"":"none";
@@ -898,6 +935,26 @@
   }
   // ---- Bloom 靜心首頁 ----
   function greetWord(){var h=new Date().getHours();if(h<5)return"夜深了";if(h<11)return"早安";if(h<14)return"午安";if(h<18)return"午後好";if(h<22)return"晚安";return"夜深了";}
+  function timePeriod(){var h=new Date().getHours();if(h<11)return"morning";if(h<17)return"afternoon";if(h<21)return"evening";return"night";}
+  function applyTimeTint(){document.body.classList.remove("tp-morning","tp-afternoon","tp-evening","tp-night");document.body.classList.add("tp-"+timePeriod());}
+  var DSKEY="lifeos_dayscore_";
+  function loadDayScore(d){try{return JSON.parse(localStorage.getItem(DSKEY+d)||"{}");}catch(e){return{};}}
+  function saveDayScore(d,obj){try{localStorage.setItem(DSKEY+d,JSON.stringify(obj));}catch(e){}}
+  function starRowHtml(label,key,val){
+    val=val||0;
+    var h='<div class="star-rate"><span class="sr-label">'+label+'</span><span class="sr-stars">';
+    for(var i=1;i<=5;i++){h+='<button class="sr-star'+(i<=val?" on":"")+'" data-scoretap="'+key+'|'+i+'">★</button>';}
+    return h+'</span></div>';
+  }
+  function todayLoadLine(total,doneN,eventN){
+    var h=new Date().getHours(),left=total-doneN;
+    if(!total&&!eventN)return"今天沒有安排，自由發揮就好。";
+    if(total&&left===0)return"今天的事都完成了，好好休息一下。";
+    if(total<=2)return"今天只有 "+total+" 件事，挺悠閒的。";
+    if(h>=14&&left>=4)return"今天下午還很滿，撐住喔。";
+    if(total>=6)return"今天排得比較滿，一件一件來就好。";
+    return"今天步調剛剛好。";
+  }
   function bloomDaysCount(){
     var mk=ymd(new Date()).slice(0,7),by={};
     items.concat(archive).forEach(function(i){if((i.date||"").indexOf(mk)===0)(by[i.date]=by[i.date]||[]).push(i);});
@@ -936,62 +993,82 @@
     var todays=items.filter(function(i){return i.date===t&&i.kind!=="event";});
     var todaysEvents=itemsFor(t).filter(function(i){return i.kind==="event";});
     var total=todays.length;
+    var doneN=todays.filter(function(i){return i.done;}).length;
+    var ds=loadDayScore(t);
 
-    // 問候 + 心情
-    var mk=moodLog[t];
-    var moodBtn='<span class="moodtap" data-moodtap="1">'+(mk?ic(MOODICON[mk]):'<svg class="ic" viewBox="0 0 32 32" fill="none" stroke="#9A9186" stroke-width="1.6"><circle cx="16" cy="16" r="9"/></svg>')+(mk?MOODS.find(function(m){return m.k===mk;}).name:"記錄心情")+'</span>';
-    main.insertAdjacentHTML("beforeend",'<div class="bloom-head">'+moodBtn+'<div class="greetline">'+greetWord()+'</div><div class="bloom-intent">今天是一個適合慢慢成長的日子。</div></div>');
-    if(moodOpen){
-      var mp=document.createElement("div");mp.className="mood-picker";
-      MOODS.forEach(function(m){mp.innerHTML+='<button data-moodset="'+m.k+'">'+ic(MOODICON[m.k])+'<span>'+m.name+'</span></button>';});
-      main.appendChild(mp);
-    }
+    // 今日狀態主視覺卡：花瓣數／進度條／睡眠・工作・心情打分
+    var hero=document.createElement("div");hero.className="hero-card";
+    var segs=6,filled=total?Math.round((doneN/total)*segs):0;
+    var barsHtml="";for(var bi=0;bi<segs;bi++){barsHtml+='<i class="'+(bi<filled?"on":"")+'"></i>';}
+    hero.innerHTML=
+      (total?('<div class="hero-num-row"><span class="hero-num">'+doneN+'</span><span class="hero-unit">/ '+total+' 片花瓣</span></div><div class="hero-bar">'+barsHtml+'</div>')
+            :'<div class="hero-num-row"><span class="hero-unit">今天還沒有安排任務</span></div>')+
+      '<div class="star-rows">'+starRowHtml("睡眠","sleep",ds.sleep)+starRowHtml("工作","work",ds.work)+starRowHtml("心情","mood",ds.mood)+'</div>';
+    main.appendChild(hero);
 
-    // 今日行程
-    var tc=document.createElement("div");tc.className="card";
-    tc.innerHTML='<div class="sec-head">'+ic("g_schedule")+'<span class="lbl">今日行程</span></div>';
-    if(!todaysEvents.length){
-      tc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天沒有固定行程，自由安排。</div>');
+    // 今日重點：只顯示尚未完成、依星等優先的前三件，整張卡可直接點擊完成
+    var pcWrap=document.createElement("div");pcWrap.className="section-block";
+    pcWrap.innerHTML='<div class="mini-label">今日重點</div>';
+    main.appendChild(pcWrap);
+    var undone=todays.filter(function(i){return !i.done;});
+    if(!total){
+      pcWrap.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天還很空白。<br>到「今日」加一件想做的事吧。</div>');
+    }else if(!undone.length){
+      pcWrap.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天的事都完成了 🌿<br>好好休息一下。</div>');
     }else{
+      var starred=undone.filter(function(i){return i.star;});
+      var rest=undone.filter(function(i){return !i.star;});
+      rest.sort(function(a,b){var da=daysUntil(a.due),db=daysUntil(b.due);var ua=(da!=null&&da<=7)?da:99,ub=(db!=null&&db<=7)?db:99;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
+      var focus=starred.concat(rest).slice(0,3);
+      focus.forEach(function(it){
+        var burst=(bloomBurst===it.id&&it.done)?" burst":"";
+        var isRest=it.cat==="recharge";
+        var tagColor=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--accent)";
+        var tag=it.time?it.time:"今天內";
+        var row=document.createElement("div");row.className="focus-card"+burst+(isRest?" tier-rest":"");
+        row.innerHTML='<span class="fc-body" data-toggle="'+it.id+'"><span class="fc-tag" style="color:'+tagColor+'"></span><span class="fc-title"></span></span>'+
+          '<button class="fc-edit" data-edit="'+it.id+'">⋯</button>'+
+          '<button class="fc-del" data-del="'+it.id+'">×</button>';
+        row.querySelector(".fc-tag").textContent=tag;
+        row.querySelector(".fc-title").textContent=it.title;
+        pcWrap.appendChild(row);
+      });
+      if(undone.length>3){
+        pcWrap.insertAdjacentHTML("beforeend",'<div class="more-hint" data-goto="today">還有 '+(undone.length-3)+' 件小事，晚點再看 ›</div>');
+      }
+    }
+    bloomBurst=null;
+
+    // 花園小插圖
+    var streak0=streakDays(),stage0=growthStage(streak0);
+    var gwrap=document.createElement("div");gwrap.className="garden-peek";
+    gwrap.innerHTML='<div class="garden-ic">'+ic(stage0[1])+'</div><div class="garden-cap">'+(doneN>0?"花園今天長了一朵新花":"完成一件事，花園就會長大一點")+'</div>';
+    main.appendChild(gwrap);
+
+    // 今日行程（沒有行程時不佔版面）
+    if(todaysEvents.length){
+      var tc=document.createElement("div");tc.className="card";
+      tc.innerHTML='<div class="sec-head">'+ic("g_schedule")+'<span class="lbl">今日行程</span></div>';
       todaysEvents.slice(0,4).forEach(function(it){
         var trange=it.time?it.time:(it.endDate&&it.endDate!==it.date?"跨日":"全天");
         tc.innerHTML+='<div class="tl-line"><span class="tl-dot"></span><span class="tl-time">'+esc(trange)+'</span><span class="tl-title">'+esc(it.title)+'</span></div>';
       });
+      main.appendChild(tc);
     }
-    main.appendChild(tc);
 
-    // 今日花瓣（必須做前三件，完成的會被新的遞補上來）
-    var pc=document.createElement("div");pc.className="card";
-    var doneN=todays.filter(function(i){return i.done;}).length;
-    pc.innerHTML='<div class="sec-head">'+ic("g_petal")+'<span class="lbl">今日花瓣</span>'+(total?'<span class="petal-count">'+doneN+' / '+total+'</span>':"")+'</div>';
-    main.appendChild(pc);
-    if(!total){
-      pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天還很空白。<br>到「今日」加一件想做的事吧。</div>');
-    }else if(todays.every(function(i){return i.done;})){
-      pc.insertAdjacentHTML("beforeend",'<div class="focus-empty">今天的事都完成了 🌿<br>好好休息一下。</div>');
-    }else{
-      var starred=todays.filter(function(i){return i.star;});
-      var undoneStar=starred.filter(function(i){return !i.done;});
-      var doneStar=starred.filter(function(i){return i.done;});
-      var focus=undoneStar.slice();
-      if(focus.length<3){
-        var auto=todays.filter(function(i){return !i.done&&!i.star;});
-        auto.sort(function(a,b){var da=daysUntil(a.due),db=daysUntil(b.due);var ua=(da!=null&&da<=7)?da:99,ub=(db!=null&&db<=7)?db:99;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
-        focus=focus.concat(auto.slice(0,3-focus.length));
-      }
-      if(focus.length<3)focus=focus.concat(doneStar.slice(0,3-focus.length));
-      focus=focus.slice(0,3);
-      focus.sort(function(a,b){var ad=a.done?1:0,bd=b.done?1:0;if(ad!==bd)return ad-bd;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return (a.time||"")<(b.time||"")?-1:1;});
-      focus.forEach(function(it){
-          var burst=(bloomBurst===it.id&&it.done)?" burst":"";
-          var row=document.createElement("div");row.className="petal-line"+burst;
-          row.innerHTML='<button class="petal-check'+(it.done?" on":"")+'" data-toggle="'+it.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>'+
-            '<span class="petal-title'+(it.done?" done":"")+'"></span>';
-          row.querySelector(".petal-title").textContent=it.title;
-          pc.appendChild(row);
+    // 今天已經完成（正向放大，取代單純的倒數感）
+    if(doneN){
+      var dcard=document.createElement("div");dcard.className="done-card";
+      dcard.innerHTML='<div class="mini-label">今天已經完成</div>';
+      var dl=document.createElement("div");dl.className="done-list";
+      todays.filter(function(i){return i.done;}).forEach(function(it){
+        var r=document.createElement("div");r.className="done-row";
+        r.textContent=it.title;
+        dl.appendChild(r);
       });
+      dcard.appendChild(dl);
+      main.appendChild(dcard);
     }
-    bloomBurst=null;
 
     // 花園健康度
     var streak=streakDays(),stage=growthStage(streak),health=healthWeek();
@@ -1003,11 +1080,13 @@
       '<div class="health-sub">'+(health!==null?('過去七天平均完成 '+health+'%　'):'')+nextInfo+'</div>';
     var keys=feat.length?feat.slice(0,3):HABITS.slice(0,3).map(function(h){return h.k;});
     var th=todayH();
+    var grid=document.createElement("div");grid.className="nutri-grid";
     keys.forEach(function(k){var h=HAB[k];if(!h)return;
       var cur=th[k]||0,r,val;
       if(h.type==="count"){r=Math.min(cur/h.max,1);val=cur+" "+h.unit;}else{r=cur?1:0;val=cur?("完成 "+CKV):"還沒";}
-      hc.innerHTML+='<div class="nutri-row">'+ic(h.icon)+'<span class="n-name">'+h.name+'</span><div class="nutri-bar"><i style="width:'+(r*100)+'%"></i></div><span class="n-val">'+val+'</span></div>';
+      grid.innerHTML+='<div class="nutri-tile"><div class="nutri-tile-head">'+ic(h.icon)+'<span>'+h.name+'</span></div><div class="nutri-tile-val">'+val+'</div><div class="nutri-tile-bar"><i style="width:'+(r*100)+'%"></i></div></div>';
     });
+    hc.appendChild(grid);
     main.appendChild(hc);
 
     // 最近成果
@@ -1214,17 +1293,16 @@
   }
   function rowHtml(it){
     var color=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--accent)";
-    var wrap=document.createElement("div");wrap.className="row-wrap";
-    wrap.innerHTML='<div class="row-swipebg" data-del="'+it.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M18 7l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7"/></svg></div>'+
-      '<div class="row'+(it.done?" done":"")+'" style="color:'+color+'">'+
+    var row=document.createElement("div");row.className="row"+(it.done?" done":"");row.style.color=color;
+    row.innerHTML=
         '<div class="dot" data-toggle="'+it.id+'" style="border-color:'+color+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
         '<div class="row-body" data-edit="'+it.id+'"><div class="row-title" style="color:var(--ink)"></div>'+metaLine(it)+'</div>'+
         '<button class="star-toggle'+(it.star?" on":"")+'" data-startap="'+it.id+'">★</button>'+
-      '</div>';
-    var titleEl=wrap.querySelector(".row-title");
+        '<button class="row-del" data-del="'+it.id+'">×</button>';
+    var titleEl=row.querySelector(".row-title");
     titleEl.textContent=it.title;
     if(it.done)titleEl.style.color="var(--muted)";
-    return wrap;
+    return row;
   }
   function renderAgenda(dateStr,host){
     host=host||main;
@@ -1591,52 +1669,13 @@
   }
 
   document.getElementById("tabbar").addEventListener("click",function(e){var b=e.target.closest(".view-btn");if(!b)return;view=b.dataset.view;showOther=false;render();});
-  var swipeState=null;
-  main.addEventListener("pointerdown",function(e){
-    var wrap=e.target.closest(".row-wrap");
-    document.querySelectorAll(".row-wrap.swiped").forEach(function(w){if(w!==wrap)w.classList.remove("swiped");});
-    if(!wrap)return;
-    var inner=wrap.querySelector(".row");
-    swipeState={wrap:wrap,inner:inner,startX:e.clientX,startY:e.clientY,dx:0,dragging:false,wasOpen:wrap.classList.contains("swiped")};
-  });
-  main.addEventListener("pointermove",function(e){
-    if(!swipeState)return;
-    var dx=e.clientX-swipeState.startX, dy=e.clientY-swipeState.startY;
-    if(!swipeState.dragging){
-      var adx=Math.abs(dx), ady=Math.abs(dy);
-      if(Math.max(adx,ady)>10){
-        if(adx>ady){swipeState.dragging=true;swipeState.wrap.classList.add("dragging");}
-        else{swipeState=null;return;}
-      }else{return;}
-    }
-    if(swipeState&&swipeState.dragging){
-      var base=swipeState.wasOpen?-64:0;
-      var nx=Math.min(0,Math.max(-84,base+dx));
-      swipeState.dx=nx;
-      swipeState.inner.style.transition="none";
-      swipeState.inner.style.transform="translateX("+nx+"px)";
-    }
-  });
-  function endSwipe(){
-    if(!swipeState)return;
-    swipeState.wrap.classList.remove("dragging");
-    if(swipeState.dragging){
-      swipeState.inner.style.transition="";
-      swipeState.inner.style.transform="";
-      if(swipeState.dx<-32)swipeState.wrap.classList.add("swiped");
-      else swipeState.wrap.classList.remove("swiped");
-    }
-    swipeState=null;
-  }
-  main.addEventListener("pointerup",endSwipe);
-  main.addEventListener("pointercancel",endSwipe);
   main.addEventListener("click",function(e){
-    var openWrap=e.target.closest(".row-wrap.swiped");
-    if(openWrap&&!e.target.closest("[data-del]")){openWrap.classList.remove("swiped");return;}
     var mt=e.target.closest("[data-moodtap]");
     if(mt){moodOpen=!moodOpen;render();return;}
     var ms=e.target.closest("[data-moodset]");
     if(ms){moodLog[ymd(new Date())]=ms.dataset.moodset;saveMoodLog();moodOpen=false;render();return;}
+    var sct=e.target.closest("[data-scoretap]");
+    if(sct){var sp=sct.dataset.scoretap.split("|"),skey=sp[0],sval=+sp[1];var std=ymd(new Date());var dsv=loadDayScore(std);dsv[skey]=(dsv[skey]===sval?sval-1:sval);saveDayScore(std,dsv);render();return;}
     var gt=e.target.closest("[data-goto]");
     if(gt){view=gt.dataset.goto;showOther=false;render();return;}
     var fst=e.target.closest("[data-featstar]");
@@ -1676,7 +1715,7 @@
     var stg=e.target.closest("[data-startap]");
     if(stg){var sid=+stg.dataset.startap,sit=items.find(function(x){return x.id===sid;});if(sit){sit.star=!sit.star;save();render();}return;}
     var dl=e.target.closest("[data-del]");
-    if(dl){var did=+dl.dataset.del;items=items.filter(function(x){return x.id!==did;});save();render();return;}
+    if(dl){var did=+dl.dataset.del;if(!confirm("確定要刪除這件事嗎？"))return;items=items.filter(function(x){return x.id!==did;});save();render();return;}
     var ed=e.target.closest("[data-edit]");
     if(ed){var eit=items.find(function(x){return x.id===+ed.dataset.edit;});if(eit)openSheet(eit);return;}
     var re=e.target.closest("[data-recedit]");
