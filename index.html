@@ -627,7 +627,11 @@
 <script>
 (function(){
   "use strict";
-  var KEY="lifeos_v1", MKEY="lifeos_mode_";
+  var KEY="lifeos_v1", MKEY="lifeos_mode_", DELKEY="lifeos_deleted";
+  function loadDeleted(){try{return JSON.parse(localStorage.getItem(DELKEY)||"{}");}catch(e){return{};}}
+  function saveDeleted(){try{localStorage.setItem(DELKEY,JSON.stringify(deletedIds));}catch(e){}}
+  var deletedIds=loadDeleted();
+  function markDeleted(id){deletedIds[id]=Date.now();saveDeleted();}
   var DOW=["週日","週一","週二","週三","週四","週五","週六"];
 
   var CATS=[
@@ -1774,7 +1778,7 @@
     var stg=e.target.closest("[data-startap]");
     if(stg){var sid=+stg.dataset.startap,sit=items.find(function(x){return x.id===sid;});if(sit){sit.star=!sit.star;save();render();}return;}
     var dl=e.target.closest("[data-del]");
-    if(dl){var did=+dl.dataset.del;if(!confirm("確定要刪除這件事嗎？"))return;items=items.filter(function(x){return x.id!==did;});save();render();return;}
+    if(dl){var did=+dl.dataset.del;if(!confirm("確定要刪除這件事嗎？"))return;items=items.filter(function(x){return x.id!==did;});markDeleted(did);save();render();return;}
     var ed=e.target.closest("[data-edit]");
     if(ed){var eit=items.find(function(x){return x.id===+ed.dataset.edit;});if(eit)openSheet(eit);return;}
     var re=e.target.closest("[data-recedit]");
@@ -1853,6 +1857,7 @@
     if(!editId)return;
     if(!confirm("確定要刪除這件事嗎？"))return;
     items=items.filter(function(x){return x.id!==editId;});
+    markDeleted(editId);
     save();closeSheet();render();
   });
   document.getElementById("scrim").addEventListener("click",closeSheets);
@@ -1908,6 +1913,17 @@
     function unionArr(a,b){var out=[],seen={};function add(x){var key=(x&&typeof x==="object"&&("id" in x))?("#"+x.id):JSON.stringify(x);if(seen[key])return;seen[key]=1;out.push(x);}b.forEach(add);a.forEach(add);return out;}
     function mergeObj(a,b){var out={},k;for(k in a)out[k]=a[k];for(k in b){if(!(k in out)){out[k]=b[k];continue;}var av=out[k],bv=b[k];if(av&&bv&&typeof av==="object"&&typeof bv==="object"&&!Array.isArray(av)&&!Array.isArray(bv)){var m={},kk;for(kk in av)m[kk]=av[kk];for(kk in bv){m[kk]=(typeof av[kk]==="number"&&typeof bv[kk]==="number")?Math.max(av[kk],bv[kk]):bv[kk];}out[k]=m;}else{out[k]=bv;}}return out;}
     function mergeStates(a,b){var out={},keys={},x;for(x in a)keys[x]=1;for(x in b)keys[x]=1;Object.keys(keys).forEach(function(k){if(a[k]==null){out[k]=b[k];return;}if(b[k]==null){out[k]=a[k];return;}var pa=tryParse(a[k]),pb=tryParse(b[k]);if(Array.isArray(pa)&&Array.isArray(pb)){out[k]=JSON.stringify(unionArr(pa,pb));}else if(pa&&pb&&typeof pa==="object"&&typeof pb==="object"){out[k]=JSON.stringify(mergeObj(pa,pb));}else{out[k]=b[k];}});return out;}
+    function pruneDeleted(merged){
+      try{
+        var delMap=tryParse(merged[DELKEY]||"{}")||{};
+        var arr=tryParse(merged[KEY]||"[]")||[];
+        if(Array.isArray(arr)&&delMap&&typeof delMap==="object"){
+          arr=arr.filter(function(it){return !(it&&("id" in it)&&(it.id in delMap));});
+          merged[KEY]=JSON.stringify(arr);
+        }
+      }catch(e){}
+      return merged;
+    }
     function booted(){try{return localStorage.getItem(BOOT)==="1";}catch(e){return false;}}
     function markBooted(){try{_set(BOOT,"1");}catch(e){}}
 
@@ -1923,6 +1939,7 @@
       if(!booted()){
         if(!Object.keys(state).length){markBooted();doPush();return;}   // 雲端還沒資料 → 把本機推上去
         var merged=mergeStates(snapshotLocal(),state);                  // 第一次連上：本機 ∪ 雲端，不丟資料
+        merged=pruneDeleted(merged);                                    // 但已刪除的任務不應該被聯集救回來
         markBooted(); applyRemote(merged); doPush(); return;
       }
       if(!Object.keys(state).length){                                   // 雲端空但本機有 → 用本機補回，不清空
