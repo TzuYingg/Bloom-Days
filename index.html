@@ -1487,7 +1487,7 @@
           var multi=end!==x.date;
           var isStart=ds===x.date, isEnd=ds===end;
           var seg=!multi?"":(isStart?"seg-start":(isEnd?"seg-end":"seg-mid"));
-          var label=(!multi||isStart)?((x.time?esc(x.time)+" ":"")+esc(x.title)):"&nbsp;";
+          var label=(!multi||isStart)?esc(x.title):"&nbsp;";
           return '<div class="ct-chip event '+seg+'" style="background:'+color+';color:#fff;">'+label+'</div>';
         }
         var mig=(x.migrated&&!x.done)?"➔ ":"";
