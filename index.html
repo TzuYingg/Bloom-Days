@@ -374,6 +374,8 @@
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;}
   .field input{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:14px 15px;outline:none;transition:border-color .2s ease;}
   .field input:focus{border-color:var(--accent);}
+  .field textarea{width:100%;font-family:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:13px 15px;outline:none;resize:vertical;min-height:48px;line-height:1.6;transition:border-color .2s ease;}
+  .field textarea:focus{border-color:var(--accent);}
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
   .chips button{font-family:inherit;font-size:14px;padding:9px 13px;border-radius:20px;cursor:pointer;border:1px solid var(--hair);background:var(--card);color:var(--muted);transition:all .16s ease;display:flex;align-items:center;gap:6px;}
   .chips button.on{color:var(--ink);border-color:var(--accent);background:var(--accent-soft);font-weight:500;}
@@ -546,6 +548,8 @@
     <div id="formFields">
       <div class="field"><label>做什麼</label>
         <input type="text" id="inTitle" placeholder="例如：陪孩子散步" autocomplete="off"></div>
+      <div class="field"><label>備註（可留空）</label>
+        <textarea id="inNote" placeholder="填一些簡單的資訊…" rows="2"></textarea></div>
       <div class="field taskonly"><label>分類</label><div class="chips" id="segCat"></div></div>
       <div class="field eventonly"><label>分類（可留空）</label><div class="chips" id="segECat"></div></div>
       <div class="field taskonly"><label>在哪些情境出現（可多選、可留空）</label><div class="chips" id="segCtx"></div></div>
@@ -1327,6 +1331,7 @@
   function metaLine(it){
     var bits=[];
     if(it.migrated&&!it.done)bits.push('<span class="ml-mig"'+(it.star?"":' data-migratepull="'+it.id+'"')+'>➔</span>');
+    if(it.note)bits.push('<span class="ml-ic">'+ic("note")+'</span>');
     if(it.cat&&CAT[it.cat])bits.push('<span class="ml-ic">'+ic(it.cat)+'</span>');
     if(it.time)bits.push('<span>'+it.time+'</span>');
     if(it.cup)bits.push('<span class="ml-ic">'+ic("cup")+'</span><span>'+CUPT[it.cup]+'</span>');
@@ -1345,7 +1350,7 @@
     else if(it.time){trange=it.time+(it.endTime?"–"+it.endTime:"");}
     else{trange="全天";}
     row.innerHTML='<div class="ev-mark" style="background:'+color+'"></div>'+
-      '<div class="row-body" data-edit="'+it.id+'"><div class="row-time">'+trange+'</div><div class="row-title" style="color:var(--ink)"></div></div>'+
+      '<div class="row-body" data-edit="'+it.id+'"><div class="row-time">'+trange+'</div><div class="row-title" style="color:var(--ink)"></div>'+(it.note?'<div class="row-meta"><span class="ml-ic">'+ic("note")+'</span></div>':'')+'</div>'+
       '<button class="row-del" data-del="'+it.id+'">×</button>';
     row.querySelector(".row-title").textContent=it.title;
     return row;
@@ -1618,6 +1623,7 @@
     if(sECat){var bec=document.querySelector('#segECat [data-ec="'+sECat+'"]');if(bec)bec.classList.add("on");}
     sCtx.forEach(function(x){var bx=document.querySelector('#segCtx [data-x="'+x+'"]');if(bx)bx.classList.add("on");});
     document.getElementById("inTitle").value=item?item.title:"";
+    document.getElementById("inNote").value=item?(item.note||""):"";
     document.getElementById("inTime").value=item?(item.time||""):"";
     document.getElementById("inStartDate").value=item?(item.date||""):"";
     document.getElementById("inEndDate").value=item?(item.endDate||""):"";
@@ -1705,25 +1711,26 @@
   function saveItem(){
     var t=document.getElementById("inTitle").value.trim();
     if(!t){document.getElementById("inTitle").focus();return;}
+    var note=document.getElementById("inNote").value.trim();
     if(sKind){
       var sd=document.getElementById("inStartDate").value||ymd(new Date());
       var ed=document.getElementById("inEndDate").value||"";
       if(ed&&ed<sd)ed=sd;
       if(editId){
         var eit=items.find(function(x){return x.id===editId;});
-        if(eit){eit.title=t;eit.kind="event";eit.cat=sECat||"";eit.date=sd;eit.endDate=ed;eit.time=document.getElementById("inTime").value;eit.endTime=document.getElementById("inEndTime").value;eit.ctx=[];eit.cup=0;eit.eng=0;eit.due="";eit.star=false;}
+        if(eit){eit.title=t;eit.note=note;eit.kind="event";eit.cat=sECat||"";eit.date=sd;eit.endDate=ed;eit.time=document.getElementById("inTime").value;eit.endTime=document.getElementById("inEndTime").value;eit.ctx=[];eit.cup=0;eit.eng=0;eit.due="";eit.star=false;}
         editId=null;save();closeSheet();render();return;
       }
-      items.push({id:Date.now(),kind:"event",cat:sECat||"",ctx:[],date:sd,endDate:ed,time:document.getElementById("inTime").value,endTime:document.getElementById("inEndTime").value,cup:0,eng:0,title:t,due:"",done:false,star:false});
+      items.push({id:Date.now(),kind:"event",cat:sECat||"",ctx:[],date:sd,endDate:ed,time:document.getElementById("inTime").value,endTime:document.getElementById("inEndTime").value,cup:0,eng:0,title:t,note:note,due:"",done:false,star:false});
       save();closeSheet();render();return;
     }
     if(editId){
       var it=items.find(function(x){return x.id===editId;});
-      if(it){it.title=t;it.kind="task";it.cat=sCat||"";it.ctx=sCtx.slice();it.date=document.getElementById("inStartDate").value||it.date;it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.star=sStar;it.endDate="";it.endTime="";}
+      if(it){it.title=t;it.note=note;it.kind="task";it.cat=sCat||"";it.ctx=sCtx.slice();it.date=document.getElementById("inStartDate").value||it.date;it.time=document.getElementById("inTime").value;it.cup=sCup||0;it.eng=sEng||0;it.star=sStar;it.endDate="";it.endTime="";}
       editId=null;save();closeSheet();render();return;
     }
     var targetDate=document.getElementById("inStartDate").value||(view==="calendar"?ymd(sel):ymd(new Date()));
-    items.push({id:Date.now(),kind:"task",cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,due:"",done:false,star:sStar});
+    items.push({id:Date.now(),kind:"task",cat:sCat||"",ctx:sCtx.slice(),date:targetDate,time:document.getElementById("inTime").value,cup:sCup||0,eng:sEng||0,title:t,note:note,due:"",done:false,star:sStar});
     save();closeSheet();render();
   }
 
