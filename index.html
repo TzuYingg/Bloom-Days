@@ -1927,27 +1927,44 @@
     function booted(){try{return localStorage.getItem(BOOT)==="1";}catch(e){return false;}}
     function markBooted(){try{_set(BOOT,"1");}catch(e){}}
 
-    function doPush(){
-      var data=snapshotLocal(); lastPushedJson=JSON.stringify(data); setStatus("saving");
-      fetch(URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})
-        .then(function(r){setStatus(r.ok?"ok":"err");}).catch(function(){setStatus("err");});
+    function doPush(retry){
+      var data=snapshotLocal(); var body=JSON.stringify(data);
+      lastPushedJson=body; setStatus("saving");
+      fetch(URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:body})
+        .then(function(r){ if(!r.ok)throw new Error("bad status"); setStatus("ok"); })
+        .catch(function(){
+          retry=(retry||0)+1;
+          if(retry<=3){ setTimeout(function(){doPush(retry);},1500*retry); }   // 失敗自動重試，最多3次
+          else { setStatus("err"); }
+        });
     }
     function schedulePush(){clearTimeout(pushT);setStatus("saving");pushT=setTimeout(doPush,600);}
 
+    // 切出App／關閉分頁前，把還在排隊等送出的變更立刻強制送出，
+    // 避免這筆還沒上雲端的新資料，在下次打開時被雲端的舊版本蓋掉
+    function flushNow(){
+      if(!pushT)return;                                                       // 沒有排隊中的推送，不用做事
+      clearTimeout(pushT); pushT=null;
+      var data=snapshotLocal(); var body=JSON.stringify(data);
+      lastPushedJson=body;
+      try{ fetch(URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:body,keepalive:true}); }catch(e){}
+    }
+    document.addEventListener("visibilitychange",function(){ if(document.hidden)flushNow(); });
+    window.addEventListener("pagehide",flushNow);
+
     function onRemoteState(state){
       state=state||{};
-      if(!booted()){
-        if(!Object.keys(state).length){markBooted();doPush();return;}   // 雲端還沒資料 → 把本機推上去
-        var merged=mergeStates(snapshotLocal(),state);                  // 第一次連上：本機 ∪ 雲端，不丟資料
-        merged=pruneDeleted(merged);                                    // 但已刪除的任務不應該被聯集救回來
-        markBooted(); applyRemote(merged); doPush(); return;
-      }
       if(!Object.keys(state).length){                                   // 雲端空但本機有 → 用本機補回，不清空
-        if(Object.keys(snapshotLocal()).length)doPush(); return;
+        if(Object.keys(snapshotLocal()).length){markBooted();doPush();}
+        else{markBooted();}
+        return;
       }
       var rjson=JSON.stringify(state);
       if(rjson===lastPushedJson){setStatus("ok");return;}               // 自己寫入的回音
-      applyRemote(state); setStatus("ok");                              // 真正的遠端更新 → 套用
+      var merged=mergeStates(snapshotLocal(),state);                    // 每次都合併「本機 ∪ 雲端」，不整份覆蓋本機
+      merged=pruneDeleted(merged);                                      // 已刪除的任務不會被聯集救回來
+      markBooted(); applyRemote(merged); setStatus("ok");
+      if(JSON.stringify(merged)!==rjson) doPush();                      // 合併後跟雲端不同，補推一次讓其他裝置也拿到
     }
 
     // 定時回抓（EventSource 不可用時的後備）
