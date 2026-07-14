@@ -906,15 +906,32 @@
     });
     if(moved){items=keep;save();saveArchive();}
   }
+  function recurInstanceId(recurId,dateStr){
+    var s=recurId+"|"+dateStr,h=5381;
+    for(var i=0;i<s.length;i++){h=((h*33)^s.charCodeAt(i))>>>0;}
+    return h;
+  }
   function genRecurring(y,m){
     var mk=y+"-"+String(m+1).padStart(2,"0"),last=new Date(y,m+1,0).getDate(),changed=false;
     RECUR.forEach(function(t){
       var key=t.id+":"+mk;if(rgen.indexOf(key)>=0)return;
       var d=t.day==="last"?last:Math.min(t.day,last);
-      items.push({id:Date.now()+Math.floor(Math.random()*99999),cat:t.cat,date:mk+"-"+String(d).padStart(2,"0"),time:"",cup:t.cup,eng:t.eng,title:t.title,due:"",done:false,recur:true});
+      var dateStr=mk+"-"+String(d).padStart(2,"0");
+      items.push({id:recurInstanceId(t.id,dateStr),cat:t.cat,date:dateStr,time:"",cup:t.cup,eng:t.eng,title:t.title,due:"",done:false,recur:true});
       rgen.push(key);changed=true;
     });
     if(changed){save();try{localStorage.setItem(RGKEY,JSON.stringify(rgen));}catch(e){}}
+  }
+  // 清掉之前因為連線時機造成的固定事項重複任務（同一天、同標題、同分類、同耗時耗神的多筆只留一筆）
+  function dedupeRecurDuplicates(){
+    var seen={},out=[],changed=false;
+    items.forEach(function(it){
+      if(!it.recur){out.push(it);return;}
+      var sig=it.date+"|"+it.title+"|"+it.cat+"|"+it.cup+"|"+it.eng;
+      if(seen[sig]){changed=true;if(it.done)seen[sig].done=true;return;}
+      seen[sig]=it;out.push(it);
+    });
+    if(changed){items=out;save();}
   }
   var main=document.getElementById("main"), app=document.documentElement;
 
@@ -1897,6 +1914,7 @@
   document.getElementById("inTitle").addEventListener("keydown",function(e){if(e.key==="Enter")saveItem();});
 
   genRecurring(new Date().getFullYear(),new Date().getMonth());
+  dedupeRecurDuplicates();
   archiveOld();
   (function carryForward(){var t=ymd(new Date()),ch=false;items.forEach(function(i){if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;i.migrated=true;ch=true;}});if(ch)save();})();
   fmtDateHeader();render();
@@ -1926,6 +1944,7 @@
 
     function hydrateFromLocal(){
       mem=null; items=load();
+      dedupeRecurDuplicates();
       mode=loadMode(ymd(new Date()));
       try{todayMode=localStorage.getItem(TMKEY)||"context";}catch(e){todayMode="context";}
       RECUR=loadRecur(); words=loadWords(); inbox=loadInbox();
