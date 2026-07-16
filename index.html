@@ -1418,8 +1418,8 @@
     }else{full=itemsFor(dateStr);}
     var list=full, hidden=[];
     if(view==="today"){
-      list=full.filter(function(i){return i.kind==="event"||showsIn(i,mode)||dueUrgent(i);});
-      hidden=full.filter(function(i){return i.kind!=="event"&&!showsIn(i,mode)&&!dueUrgent(i);});
+      list=full.filter(function(i){return i.kind==="event"||showsIn(i,mode)||dueUrgent(i)||(i.migrated&&!i.done);});
+      hidden=full.filter(function(i){return i.kind!=="event"&&!showsIn(i,mode)&&!dueUrgent(i)&&!(i.migrated&&!i.done);});
       list.sort(function(a,b){var ea=a.kind==="event"?0:1,eb=b.kind==="event"?0:1;if(ea!==eb)return ea-eb;var ua=dueUrgent(a)?0:1,ub=dueUrgent(b)?0:1;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return a.time<b.time?-1:a.time>b.time?1:0;});
     }
     if(!list.length&&!hidden.length){
