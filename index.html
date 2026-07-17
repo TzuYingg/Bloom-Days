@@ -941,6 +941,7 @@
   function carryForward(){
     var t=ymd(new Date()),ch=false;
     items.forEach(function(i){
+      if(i.kind!=="event"&&!i.done&&i.migrated&&!i.originDate){i.originDate=t;ch=true;}   // 補齊舊資料：之前搬移過、但還沒記錄起點的任務，從現在開始追蹤
       if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){
         if(!i.originDate)i.originDate=i.date;
         i.date=t;i.seq=null;i.migrated=true;ch=true;
