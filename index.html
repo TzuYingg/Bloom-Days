@@ -932,6 +932,14 @@
       seen[sig]=it;out.push(it);
     });
     if(changed){items=out;save();}
+    return changed;
+  }
+  // 跨天沒做完的任務，自動搬到今天並標記 migrated，讓「今日」清單一定看得到
+  function carryForward(){
+    var t=ymd(new Date()),ch=false;
+    items.forEach(function(i){if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;i.migrated=true;ch=true;}});
+    if(ch)save();
+    return ch;
   }
   var main=document.getElementById("main"), app=document.documentElement;
 
@@ -1916,7 +1924,7 @@
   genRecurring(new Date().getFullYear(),new Date().getMonth());
   dedupeRecurDuplicates();
   archiveOld();
-  (function carryForward(){var t=ymd(new Date()),ch=false;items.forEach(function(i){if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;i.migrated=true;ch=true;}});if(ch)save();})();
+  carryForward();
   fmtDateHeader();render();
 
   /* ======================= 雲端同步（Realtime Database，REST）=======================
@@ -1945,6 +1953,7 @@
     function hydrateFromLocal(){
       mem=null; items=load();
       dedupeRecurDuplicates();
+      carryForward();
       mode=loadMode(ymd(new Date()));
       try{todayMode=localStorage.getItem(TMKEY)||"context";}catch(e){todayMode="context";}
       RECUR=loadRecur(); words=loadWords(); inbox=loadInbox();
@@ -1956,6 +1965,7 @@
       localKeys.forEach(function(k){if(!(k in data))_rm(k);});          // 遠端整組刪掉的才刪
       Object.keys(data).forEach(function(k){_set(k,data[k]);});
       hydrateFromLocal(); applyingRemote=false; render();
+      if(JSON.stringify(snapshotLocal())!==JSON.stringify(data)) doPush();   // dedupe/carryForward 可能又動了本機資料，確保有補推上去
     }
 
     // 首次採用時的一次性聯集合併，避免兩台各自的舊資料被覆蓋掉
