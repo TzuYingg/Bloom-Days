@@ -210,6 +210,8 @@
   .rv-hero{text-align:center;padding:14px 20px 22px;}
   .rv-num{font-family:"Noto Serif TC",serif;font-size:52px;font-weight:500;color:var(--accent);line-height:1;}
   .rv-cap{font-family:"Noto Serif TC",serif;color:var(--ink);opacity:.72;font-size:15px;margin-top:10px;line-height:1.7;}
+  .rv-delay-note{display:block;font-family:"Noto Sans TC",sans-serif;font-size:13px;color:var(--muted);opacity:1;margin-top:2px;}
+  .row-delaytag{font-size:12px;color:#B08A5C;margin-top:3px;}
   .rv-cats{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;margin-bottom:14px;}
   .rv-cats .rv-chip{margin:0 7px;}
   .rv-cats .rv-chip:first-child{margin-left:0;}
@@ -220,9 +222,10 @@
   .rv-fbtn.on{background:var(--accent);color:#fff;}
 
   .rv-week{font-size:10.5px;color:#B0A595;padding:2px 2px 9px;}
-  .stamp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
-  .stamp{width:100%;aspect-ratio:1;border-radius:50%;background:var(--card);border:1.6px dashed var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer;}
-  .stamp .ic{width:17px;height:17px;}
+  .stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:10px;margin-bottom:18px;}
+  .stamp{width:100%;aspect-ratio:1;border-radius:50%;background:var(--card);border:1.6px dashed var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+  .stamp .ic{width:38%;height:38%;}
+  .stamp-ribbon{position:absolute;top:-4px;right:-3px;width:9px;height:13px;background:#C7A667;clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);}
 
   .detail-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);width:260px;max-width:78%;background:var(--card);border-radius:18px;padding:24px 20px 20px;box-shadow:0 8px 24px rgba(58,54,47,.25);z-index:7;opacity:0;pointer-events:none;transition:opacity .18s ease, transform .18s ease;text-align:center;}
   .detail-card.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
@@ -937,7 +940,12 @@
   // 跨天沒做完的任務，自動搬到今天並標記 migrated，讓「今日」清單一定看得到
   function carryForward(){
     var t=ymd(new Date()),ch=false;
-    items.forEach(function(i){if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){i.date=t;i.seq=null;i.migrated=true;ch=true;}});
+    items.forEach(function(i){
+      if(i.kind!=="event"&&!i.done&&i.date&&i.date<t){
+        if(!i.originDate)i.originDate=i.date;
+        i.date=t;i.seq=null;i.migrated=true;ch=true;
+      }
+    });
     if(ch)save();
     return ch;
   }
@@ -1180,7 +1188,9 @@
     var mk=ymd(new Date()).slice(0,7);
     var monthDone=done.filter(function(i){return (i.doneDate||i.date||"").indexOf(mk)===0;});
     var monthN=monthDone.length;
-    main.insertAdjacentHTML("beforeend",'<div class="rv-hero"><div class="rv-num">'+monthN+'</div><div class="rv-cap">這個月，你完成了 '+monthN+' 件事。<br>回頭看看你做到的 🌿</div></div>');
+    var delayedN=monthDone.filter(function(i){return delayDays(i)>0;}).length;
+    var heroCap='這個月，你完成了 '+monthN+' 件事。<br>回頭看看你做到的 🌿'+(delayedN?'<span class="rv-delay-note">其中有 '+delayedN+' 個，是繞了比較久的路才蓋上的印章。</span>':"");
+    main.insertAdjacentHTML("beforeend",'<div class="rv-hero"><div class="rv-num">'+monthN+'</div><div class="rv-cap">'+heroCap+'</div></div>');
     if(!monthN){main.insertAdjacentHTML("beforeend",'<div class="empty"><span class="big">還沒有完成的紀錄</span>做完一件事，這裡就會留下痕跡</div>');return;}
 
     // 分類統計（單行文字）
@@ -1213,6 +1223,7 @@
         var s=document.createElement("div");s.className="stamp";s.setAttribute("data-stamp",it.id);
         s.style.borderColor=hexA(color,.55);s.style.transform="rotate("+stampRot(it.id)+"deg)";
         s.innerHTML=c?ic(it.cat):ic("g_petal");
+        if(delayDays(it)>0)s.innerHTML+='<span class="stamp-ribbon"></span>';
         grid.appendChild(s);
       });
       main.appendChild(grid);
@@ -1228,7 +1239,12 @@
     document.getElementById("dcCtx").innerHTML=ctxHtml;
     var d=it.doneDate||it.date||"";
     var dur=CUPT[it.cup]?('・大概 '+CUPT[it.cup]):"";
-    document.getElementById("dcMeta").textContent=(d?relDay(d)+' 完成':"")+dur;
+    var dd=delayDays(it);
+    if(dd>0&&it.originDate){
+      document.getElementById("dcMeta").textContent=fmtShort(it.originDate)+' 出發，'+fmtShort(it.doneDate)+' 蓋上這個章'+dur;
+    }else{
+      document.getElementById("dcMeta").textContent=(d?relDay(d)+' 完成':"")+dur;
+    }
     scrim.classList.add("open");stampCard.classList.add("open");
   }
   function jarStar(x,y){return '<path d="M'+x+' '+(y-3.2)+'l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="#E7C065"/>';}
@@ -1388,6 +1404,17 @@
     return '<div class="row-meta">'+bits.join('<span class="ml-sep">·</span>')+'</div>';
   }
   function fmtShort(ds){var p=ds.split("-");return (+p[1])+"/"+(+p[2]);}
+  function delayDays(it){
+    if(!it.originDate||!it.doneDate)return 0;
+    var a=new Date(it.originDate+"T00:00:00"),b=new Date(it.doneDate+"T00:00:00");
+    var d=Math.round((b-a)/86400000);
+    return d>0?d:0;
+  }
+  function delayTagHtml(it){
+    var d=delayDays(it);
+    if(!(it.done&&d>0))return"";
+    return '<div class="row-delaytag">繞了 '+d+' 天的路，蓋章了</div>';
+  }
   function eventRowHtml(it){
     var color=it.cat&&CAT[it.cat]?CAT[it.cat].color:"var(--accent)";
     var row=document.createElement("div");row.className="row event-row";
@@ -1407,7 +1434,7 @@
     var row=document.createElement("div");row.className="row"+(it.done?" done":"");row.style.color=color;
     row.innerHTML=
         '<div class="dot" data-toggle="'+it.id+'" style="border-color:'+color+'"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
-        '<div class="row-body" data-edit="'+it.id+'"><div class="row-title" style="color:var(--ink)"></div>'+metaLine(it)+'</div>'+
+        '<div class="row-body" data-edit="'+it.id+'"><div class="row-title" style="color:var(--ink)"></div>'+metaLine(it)+delayTagHtml(it)+'</div>'+
         '<button class="star-toggle'+(it.star?" on":"")+'" data-startap="'+it.id+'">★</button>'+
         '<button class="row-del" data-del="'+it.id+'">×</button>';
     var titleEl=row.querySelector(".row-title");
@@ -1426,8 +1453,8 @@
     }else{full=itemsFor(dateStr);}
     var list=full, hidden=[];
     if(view==="today"){
-      list=full.filter(function(i){return i.kind==="event"||showsIn(i,mode)||dueUrgent(i)||(i.migrated&&!i.done);});
-      hidden=full.filter(function(i){return i.kind!=="event"&&!showsIn(i,mode)&&!dueUrgent(i)&&!(i.migrated&&!i.done);});
+      list=full.filter(function(i){return i.kind==="event"||showsIn(i,mode)||dueUrgent(i)||(i.migrated&&(!i.done||i.doneDate===ymd(new Date())));});
+      hidden=full.filter(function(i){return i.kind!=="event"&&!showsIn(i,mode)&&!dueUrgent(i)&&!(i.migrated&&(!i.done||i.doneDate===ymd(new Date())));});
       list.sort(function(a,b){var ea=a.kind==="event"?0:1,eb=b.kind==="event"?0:1;if(ea!==eb)return ea-eb;var ua=dueUrgent(a)?0:1,ub=dueUrgent(b)?0:1;if(ua!==ub)return ua-ub;if(!a.time&&b.time)return 1;if(a.time&&!b.time)return -1;return a.time<b.time?-1:a.time>b.time?1:0;});
     }
     if(!list.length&&!hidden.length){
